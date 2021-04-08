@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store << if you are in a Mac
+.cache/
+coverage/
+.vscode/
+.env
