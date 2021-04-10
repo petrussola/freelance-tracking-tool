@@ -35726,6 +35726,19 @@ function InputField() {
     onClick: editName
   }, "Edit") : null));
 }
+},{"react":"../node_modules/react/index.js"}],"context/context.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = require("react");
+
+var TimerContext = (0, _react.createContext)();
+var _default = TimerContext;
+exports.default = _default;
 },{"react":"../node_modules/react/index.js"}],"components/createtask/ShowTimeSpent.js":[function(require,module,exports) {
 "use strict";
 
@@ -35734,14 +35747,31 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = ShowTimeSpent;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
+
+var _context = _interopRequireDefault(require("../../context/context"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+// context
 function ShowTimeSpent() {
-  return /*#__PURE__*/_react.default.createElement("div", null, "here goes the time");
+  var _useContext = (0, _react.useContext)(_context.default),
+      timeElapsed = _useContext.timeElapsed;
+
+  var padTime = function padTime(time) {
+    return time.toString().padStart(2, "0");
+  };
+
+  var hours = padTime(Math.floor(timeElapsed / 60 / 60));
+  var minutes = Math.floor(timeElapsed / 60);
+  var seconds = padTime(timeElapsed - minutes * 60);
+  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", null, hours), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, padTime(minutes % 60)), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, seconds));
 }
-},{"react":"../node_modules/react/index.js"}],"components/createtask/TimerControls.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/createtask/TimerControls.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35751,37 +35781,25 @@ exports.default = TimerControls;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _context = _interopRequireDefault(require("../../context/context"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
+// context
 function TimerControls() {
-  var _useState = (0, _react.useState)(false),
-      _useState2 = _slicedToArray(_useState, 2),
-      hasStarted = _useState2[0],
-      setHasStarted = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      isOn = _useState4[0],
-      setIsOn = _useState4[1];
-
-  var _useState5 = (0, _react.useState)(false),
-      _useState6 = _slicedToArray(_useState5, 2),
-      hasFinished = _useState6[0],
-      setHasFinished = _useState6[1];
+  var _useContext = (0, _react.useContext)(_context.default),
+      hasStarted = _useContext.hasStarted,
+      setHasStarted = _useContext.setHasStarted,
+      isOn = _useContext.isOn,
+      setIsOn = _useContext.setIsOn,
+      hasFinished = _useContext.hasFinished,
+      setHasFinished = _useContext.setHasFinished,
+      setTimeElapsed = _useContext.setTimeElapsed,
+      intervalRef = _useContext.intervalRef;
 
   var handleStartPause = function handleStartPause() {
     if (!hasStarted) {
@@ -35789,6 +35807,18 @@ function TimerControls() {
     }
 
     setIsOn(!isOn);
+
+    if (isOn) {
+      if (intervalRef.current === null) return;
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    } else {
+      intervalRef.current = setInterval(function () {
+        setTimeElapsed(function (timeElapsed) {
+          return timeElapsed + 1;
+        });
+      }, 1000);
+    }
   };
 
   var handleStop = function handleStop() {
@@ -35803,7 +35833,7 @@ function TimerControls() {
     disabled: hasFinished ? true : false
   }, "Stop") : null);
 }
-},{"react":"../node_modules/react/index.js"}],"components/CreateTask.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/CreateTask.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35923,7 +35953,7 @@ function Routes() {
 },{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../components/CreateTask":"components/CreateTask.js","../components/TaskHistory":"components/TaskHistory.js","../components/NotFound":"components/NotFound.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _reactDom = require("react-dom");
 
@@ -35935,20 +35965,72 @@ var _NavBar = _interopRequireDefault(require("./components/NavBar"));
 
 var _Routes = _interopRequireDefault(require("./routes/Routes"));
 
+var _context = _interopRequireDefault(require("./context/context"));
+
 var _templateObject;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  border: 5px solid green;\n  min-height: 100vh;\n"])));
 
 var App = function App() {
-  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_NavBar.default, null), /*#__PURE__*/_react.default.createElement(_Routes.default, null));
+  var _useState = (0, _react.useState)(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      hasStarted = _useState2[0],
+      setHasStarted = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isOn = _useState4[0],
+      setIsOn = _useState4[1];
+
+  var _useState5 = (0, _react.useState)(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      hasFinished = _useState6[0],
+      setHasFinished = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(90000),
+      _useState8 = _slicedToArray(_useState7, 2),
+      timeElapsed = _useState8[0],
+      setTimeElapsed = _useState8[1];
+
+  var intervalRef = (0, _react.useRef)(null);
+  var valueContext = {
+    hasStarted: hasStarted,
+    setHasStarted: setHasStarted,
+    isOn: isOn,
+    setIsOn: setIsOn,
+    hasFinished: hasFinished,
+    setHasFinished: setHasFinished,
+    timeElapsed: timeElapsed,
+    setTimeElapsed: setTimeElapsed,
+    intervalRef: intervalRef
+  };
+  return /*#__PURE__*/_react.default.createElement(_context.default.Provider, {
+    value: valueContext
+  }, /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_NavBar.default, null), /*#__PURE__*/_react.default.createElement(_Routes.default, null)));
 };
 
 (0, _reactDom.render)( /*#__PURE__*/_react.default.createElement(_reactRouterDom.BrowserRouter, null, /*#__PURE__*/_react.default.createElement(App, null)), document.getElementById("root"));
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./components/NavBar":"components/NavBar.js","./routes/Routes":"routes/Routes.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./components/NavBar":"components/NavBar.js","./routes/Routes":"routes/Routes.js","./context/context":"context/context.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
