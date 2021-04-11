@@ -35760,7 +35760,8 @@ function InputField() {
       setNameTask = _useState4[1];
 
   var _useContext = (0, _react.useContext)(_context.default),
-      taskNumber = _useContext.taskNumber;
+      taskNumber = _useContext.taskNumber,
+      taskStatus = _useContext.taskStatus;
 
   var handleName = function handleName(e) {
     if (e.code === "Enter") {
@@ -35782,7 +35783,7 @@ function InputField() {
     onKeyDown: handleName
   }), nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("button", {
     onClick: editName
-  }, "Edit") : null, taskNumber > 0 ? "Task number ".concat(taskNumber) : null));
+  }, "Edit") : null, taskNumber > 0 ? "Task number ".concat(taskNumber) : null, taskStatus.length > 0 ? "Status: ".concat(taskStatus) : null));
 }
 },{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/createtask/ShowTimeSpent.js":[function(require,module,exports) {
 "use strict";
@@ -37418,6 +37419,19 @@ var envVariables = {
   endpointBase: "http://localhost:8080/"
 };
 exports.envVariables = envVariables;
+},{}],"helpers/helpers.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleErrorMessage = void 0;
+
+var handleErrorMessage = function handleErrorMessage(message, cb) {
+  return cb(message);
+};
+
+exports.handleErrorMessage = handleErrorMessage;
 },{}],"components/createtask/TimerControls.js":[function(require,module,exports) {
 "use strict";
 
@@ -37434,6 +37448,8 @@ var _context = _interopRequireDefault(require("../../context/context"));
 
 var _env = require("../../../config/env");
 
+var _helpers = require("../../helpers/helpers");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -37442,6 +37458,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 // context
 // env variables
+// helpers
 function TimerControls() {
   var _useContext = (0, _react.useContext)(_context.default),
       hasStarted = _useContext.hasStarted,
@@ -37453,53 +37470,30 @@ function TimerControls() {
       setTimeElapsed = _useContext.setTimeElapsed,
       intervalRef = _useContext.intervalRef,
       setTaskNumber = _useContext.setTaskNumber,
-      setErrorMessage = _useContext.setErrorMessage;
+      setErrorMessage = _useContext.setErrorMessage,
+      startTime = _useContext.startTime,
+      setStartTime = _useContext.setStartTime,
+      stopTime = _useContext.stopTime,
+      setStopTime = _useContext.setStopTime,
+      diffTime = _useContext.diffTime,
+      setDiffTime = _useContext.setDiffTime,
+      setTaskStatus = _useContext.setTaskStatus;
 
   var handleStartPause = function handleStartPause() {
-    if (!hasStarted) {
-      setHasStarted(true);
-      var startTime = Date.now(); // call server to create task with start time and get id back
+    if (!hasStarted && !isOn) {
+      // start task and set as on
+      setTaskStatus("recording time");
+      var tempStartTime = Date.now();
+      setStartTime(tempStartTime);
+    } else if (hasStarted && isOn) {
+      // pause task / set !isOn
+      var tempPauseTime = Date.now();
+      setStopTime(tempPauseTime);
+    } else if (hasStarted && !isOn) {
+      // restart task and set isOn
+      var _tempStartTime = Date.now();
 
-      console.log("starting job");
-
-      _axios.default.post("".concat(_env.envVariables.endpointBase, "create-task"), {
-        name: "test",
-        startTime: startTime
-      }).then(function (res) {
-        // get id back and set local state
-        var id = res.data.data.id;
-        setTaskNumber(id);
-        localStorage.setItem("task", JSON.stringify({
-          startTime: startTime,
-          id: id
-        }));
-      }).catch(function (err) {
-        var message = err.response.data.data.message;
-
-        if (message) {
-          setErrorMessage(message);
-        } else {
-          setErrorMessage("There was an error. Pleas try again later.");
-        }
-      });
-    }
-
-    if (!isOn) {
-      setIsOn(true);
-      intervalRef.current = setInterval(function () {
-        setTimeElapsed(function (timeElapsed) {
-          return timeElapsed + 1;
-        });
-      }, 1000); // call db and start new session with job id from state
-
-      console.log("starting session");
-    } else {
-      setIsOn(false);
-      if (intervalRef.current === null) return;
-      clearInterval(intervalRef.current);
-      intervalRef.current = null; // call db and set end session with job id from state
-
-      console.log("stopping session");
+      setStartTime(_tempStartTime);
     }
   };
 
@@ -37530,6 +37524,70 @@ function TimerControls() {
     });
   };
 
+  (0, _react.useEffect)(function () {
+    if (!hasStarted && !isOn && startTime > 0) {
+      setHasStarted(true);
+      setIsOn(true);
+
+      _axios.default.post("".concat(_env.envVariables.endpointBase, "create-task"), {
+        name: "test",
+        startTime: startTime
+      }).then(function (res) {
+        // get id back and set local state
+        var id = res.data.data.id;
+        setTaskNumber(id);
+        localStorage.setItem("task", JSON.stringify({
+          startTime: startTime,
+          id: id
+        }));
+        intervalRef.current = setInterval(function () {
+          setTimeElapsed(function (timeElapsed) {
+            return timeElapsed + 1;
+          });
+        }, 1000);
+      }).catch(function (err) {
+        var message = err.response.data.data.message;
+
+        if (message) {
+          setErrorMessage(message);
+        } else {
+          setErrorMessage("There was an error. Pleas try again later.");
+        }
+      });
+    } else if (hasStarted && !isOn) {
+      // restart timer path
+      setIsOn(true);
+      intervalRef.current = setInterval(function () {
+        setTimeElapsed(function (timeElapsed) {
+          return timeElapsed + 1;
+        });
+      }, 1000);
+    }
+  }, [startTime]);
+  (0, _react.useEffect)(function () {
+    setIsOn(false);
+    var diffTime = stopTime - startTime;
+    setDiffTime(diffTime);
+
+    if (stopTime > 0 && startTime > 0) {
+      var _JSON$parse = JSON.parse(localStorage.getItem("task")),
+          id = _JSON$parse.id; // call db and set length of task
+
+
+      _axios.default.put("".concat(_env.envVariables.endpointBase, "pause-task"), {
+        id: id,
+        diffTime: diffTime
+      }).then(function () {}).catch(function (err) {
+        var message = err.response.data.data.message;
+        (0, _helpers.handleErrorMessage)(message, setErrorMessage);
+      }).finally(function () {
+        setTaskStatus("paused");
+        if (intervalRef.current === null) return;
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      });
+    }
+  }, [stopTime]);
   return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleStartPause,
     disabled: hasFinished ? true : false
@@ -37540,7 +37598,7 @@ function TimerControls() {
     onClick: resetTask
   }, "Start New Task") : null);
 }
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../context/context":"context/context.js","../../../config/env":"../config/env.js"}],"components/CreateTask.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../context/context":"context/context.js","../../../config/env":"../config/env.js","../../helpers/helpers":"helpers/helpers.js"}],"components/CreateTask.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37731,6 +37789,26 @@ var App = function App() {
       errorMessage = _useState12[0],
       setErrorMessage = _useState12[1];
 
+  var _useState13 = (0, _react.useState)(0),
+      _useState14 = _slicedToArray(_useState13, 2),
+      startTime = _useState14[0],
+      setStartTime = _useState14[1];
+
+  var _useState15 = (0, _react.useState)(0),
+      _useState16 = _slicedToArray(_useState15, 2),
+      stopTime = _useState16[0],
+      setStopTime = _useState16[1];
+
+  var _useState17 = (0, _react.useState)(0),
+      _useState18 = _slicedToArray(_useState17, 2),
+      diffTime = _useState18[0],
+      setDiffTime = _useState18[1];
+
+  var _useState19 = (0, _react.useState)(""),
+      _useState20 = _slicedToArray(_useState19, 2),
+      taskStatus = _useState20[0],
+      setTaskStatus = _useState20[1];
+
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
     hasStarted: hasStarted,
@@ -37745,7 +37823,15 @@ var App = function App() {
     taskNumber: taskNumber,
     setTaskNumber: setTaskNumber,
     errorMessage: errorMessage,
-    setErrorMessage: setErrorMessage
+    setErrorMessage: setErrorMessage,
+    startTime: startTime,
+    setStartTime: setStartTime,
+    stopTime: stopTime,
+    setStopTime: setStopTime,
+    diffTime: diffTime,
+    setDiffTime: setDiffTime,
+    taskStatus: taskStatus,
+    setTaskStatus: setTaskStatus
   };
   return /*#__PURE__*/_react.default.createElement(_context.default.Provider, {
     value: valueContext

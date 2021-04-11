@@ -29,6 +29,10 @@ const App = () => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [taskNumber, setTaskNumber] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+  const [startTime, setStartTime] = useState(0);
+  const [stopTime, setStopTime] = useState(0);
+  const [diffTime, setDiffTime] = useState(0);
+  const [taskStatus, setTaskStatus] = useState("");
   const intervalRef = useRef(null);
 
   const valueContext = {
@@ -45,6 +49,14 @@ const App = () => {
     setTaskNumber,
     errorMessage,
     setErrorMessage,
+    startTime,
+    setStartTime,
+    stopTime,
+    setStopTime,
+    diffTime,
+    setDiffTime,
+    taskStatus,
+    setTaskStatus,
   };
 
   return (

@@ -6,7 +6,7 @@ import TimerContext from "../../context/context";
 export default function InputField() {
   const [inputField, setInputField] = useState("");
   const [nameTask, setNameTask] = useState("");
-  const { taskNumber } = useContext(TimerContext);
+  const { taskNumber, taskStatus } = useContext(TimerContext);
 
   const handleName = (e) => {
     if (e.code === "Enter") {
@@ -34,6 +34,7 @@ export default function InputField() {
         )}
         {nameTask.length > 0 ? <button onClick={editName}>Edit</button> : null}
         {taskNumber > 0 ? `Task number ${taskNumber}` : null}
+        {taskStatus.length > 0 ? `Status: ${taskStatus}` : null}
       </form>
     </div>
   );
