@@ -84,8 +84,13 @@ export default function TimerControls() {
           startTime,
         })
         .then((res) => {
+          let id;
           // get id back and set local state
-          const { id } = res.data.data;
+          if (res.data.data.id.jobId) {
+            id = res.data.data.id.jobId;
+          } else {
+            id = res.data.data.id;
+          }
           setTaskNumber(id);
           localStorage.setItem("task", JSON.stringify({ startTime, id }));
           intervalRef.current = setInterval(() => {

@@ -37533,8 +37533,14 @@ function TimerControls() {
         name: "test",
         startTime: startTime
       }).then(function (res) {
-        // get id back and set local state
-        var id = res.data.data.id;
+        var id; // get id back and set local state
+
+        if (res.data.data.id.jobId) {
+          id = res.data.data.id.jobId;
+        } else {
+          id = res.data.data.id;
+        }
+
         setTaskNumber(id);
         localStorage.setItem("task", JSON.stringify({
           startTime: startTime,
