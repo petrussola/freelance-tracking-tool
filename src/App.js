@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 // components
 import NavBar from "./components/NavBar";
+import ErrorMessage from "./components/ErrorMessage";
 
 // routes
 import Routes from "./routes/Routes";
@@ -25,7 +26,9 @@ const App = () => {
   const [hasStarted, setHasStarted] = useState(false);
   const [isOn, setIsOn] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
-  const [timeElapsed, setTimeElapsed] = useState(90000);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [taskNumber, setTaskNumber] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
   const intervalRef = useRef(null);
 
   const valueContext = {
@@ -38,12 +41,17 @@ const App = () => {
     timeElapsed,
     setTimeElapsed,
     intervalRef,
+    taskNumber,
+    setTaskNumber,
+    errorMessage,
+    setErrorMessage,
   };
 
   return (
     <TimerContext.Provider value={valueContext}>
       <StyledDiv>
         <NavBar />
+        <ErrorMessage />
         <Routes />
       </StyledDiv>
     </TimerContext.Provider>
