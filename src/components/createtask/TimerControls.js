@@ -20,14 +20,13 @@ export default function TimerControls() {
     setHasFinished,
     setTimeElapsed,
     intervalRef,
+    taskNumber,
     setTaskNumber,
     setErrorMessage,
     startTime,
     setStartTime,
     stopTime,
     setStopTime,
-    diffTime,
-    setDiffTime,
     setTaskStatus,
   } = useContext(TimerContext);
 
@@ -49,17 +48,9 @@ export default function TimerControls() {
   };
 
   const handleStop = () => {
+    const tempPauseTime = Date.now();
     setHasFinished(true);
-    // call db to set job as finished
-    console.log("stopping job");
-    if (isOn) {
-      setIsOn(false);
-      if (intervalRef.current === null) return;
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-      // call db and set end session with job id from state
-      console.log("stopping session");
-    }
+    setStopTime(tempPauseTime);
   };
 
   const resetTask = () => {
@@ -69,9 +60,10 @@ export default function TimerControls() {
     clearInterval(intervalRef.current);
     intervalRef.current = null;
     setTimeElapsed(0);
-    setTaskNumber((taskNumber) => {
-      return taskNumber + 1;
-    });
+    setTaskNumber(0);
+    setStartTime(0);
+    setStopTime(0);
+    setTaskStatus("");
   };
 
   useEffect(() => {
@@ -121,12 +113,14 @@ export default function TimerControls() {
   useEffect(() => {
     setIsOn(false);
     const diffTime = stopTime - startTime;
-    setDiffTime(diffTime);
-    if (stopTime > 0 && startTime > 0) {
-      const { id } = JSON.parse(localStorage.getItem("task"));
+    if (stopTime > 0 && startTime > 0 && !hasFinished) {
+      // const { id } = JSON.parse(localStorage.getItem("task"));
       // call db and set length of task
       axios
-        .put(`${envVariables.endpointBase}pause-task`, { id, diffTime })
+        .put(`${envVariables.endpointBase}pause-task`, {
+          id: taskNumber,
+          diffTime,
+        })
         .then(() => {})
         .catch((err) => {
           const { message } = err.response.data.data;
@@ -140,6 +134,44 @@ export default function TimerControls() {
         });
     }
   }, [stopTime]);
+
+  useEffect(() => {
+    if (hasFinished && isOn) {
+      const diffTime = stopTime - startTime;
+      axios
+        .put(`${envVariables.endpointBase}finish-task`, {
+          id: taskNumber,
+          diffTime,
+          stopTime,
+        })
+        .then(() => {
+          setTaskStatus("completed");
+        })
+        .catch((err) => {
+          const { message } = err.response.data.data;
+          handleErrorMessage(message, setErrorMessage);
+        });
+      setIsOn(false);
+      if (intervalRef.current === null) return;
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    } else if (hasFinished && !isOn) {
+      const diffTime = 0;
+      axios
+        .put(`${envVariables.endpointBase}finish-task`, {
+          id: taskNumber,
+          diffTime,
+          stopTime,
+        })
+        .then(() => {
+          setTaskStatus("completed");
+        })
+        .catch((err) => {
+          const { message } = err.response.data.data;
+          handleErrorMessage(message, setErrorMessage);
+        });
+    }
+  }, [hasFinished]);
 
   return (
     <div>

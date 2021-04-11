@@ -37469,14 +37469,13 @@ function TimerControls() {
       setHasFinished = _useContext.setHasFinished,
       setTimeElapsed = _useContext.setTimeElapsed,
       intervalRef = _useContext.intervalRef,
+      taskNumber = _useContext.taskNumber,
       setTaskNumber = _useContext.setTaskNumber,
       setErrorMessage = _useContext.setErrorMessage,
       startTime = _useContext.startTime,
       setStartTime = _useContext.setStartTime,
       stopTime = _useContext.stopTime,
       setStopTime = _useContext.setStopTime,
-      diffTime = _useContext.diffTime,
-      setDiffTime = _useContext.setDiffTime,
       setTaskStatus = _useContext.setTaskStatus;
 
   var handleStartPause = function handleStartPause() {
@@ -37498,18 +37497,9 @@ function TimerControls() {
   };
 
   var handleStop = function handleStop() {
-    setHasFinished(true); // call db to set job as finished
-
-    console.log("stopping job");
-
-    if (isOn) {
-      setIsOn(false);
-      if (intervalRef.current === null) return;
-      clearInterval(intervalRef.current);
-      intervalRef.current = null; // call db and set end session with job id from state
-
-      console.log("stopping session");
-    }
+    var tempPauseTime = Date.now();
+    setHasFinished(true);
+    setStopTime(tempPauseTime);
   };
 
   var resetTask = function resetTask() {
@@ -37519,9 +37509,10 @@ function TimerControls() {
     clearInterval(intervalRef.current);
     intervalRef.current = null;
     setTimeElapsed(0);
-    setTaskNumber(function (taskNumber) {
-      return taskNumber + 1;
-    });
+    setTaskNumber(0);
+    setStartTime(0);
+    setStopTime(0);
+    setTaskStatus("");
   };
 
   (0, _react.useEffect)(function () {
@@ -37573,15 +37564,12 @@ function TimerControls() {
   (0, _react.useEffect)(function () {
     setIsOn(false);
     var diffTime = stopTime - startTime;
-    setDiffTime(diffTime);
 
-    if (stopTime > 0 && startTime > 0) {
-      var _JSON$parse = JSON.parse(localStorage.getItem("task")),
-          id = _JSON$parse.id; // call db and set length of task
-
-
+    if (stopTime > 0 && startTime > 0 && !hasFinished) {
+      // const { id } = JSON.parse(localStorage.getItem("task"));
+      // call db and set length of task
       _axios.default.put("".concat(_env.envVariables.endpointBase, "pause-task"), {
-        id: id,
+        id: taskNumber,
         diffTime: diffTime
       }).then(function () {}).catch(function (err) {
         var message = err.response.data.data.message;
@@ -37594,6 +37582,40 @@ function TimerControls() {
       });
     }
   }, [stopTime]);
+  (0, _react.useEffect)(function () {
+    if (hasFinished && isOn) {
+      var diffTime = stopTime - startTime;
+
+      _axios.default.put("".concat(_env.envVariables.endpointBase, "finish-task"), {
+        id: taskNumber,
+        diffTime: diffTime,
+        stopTime: stopTime
+      }).then(function () {
+        setTaskStatus("completed");
+      }).catch(function (err) {
+        var message = err.response.data.data.message;
+        (0, _helpers.handleErrorMessage)(message, setErrorMessage);
+      });
+
+      setIsOn(false);
+      if (intervalRef.current === null) return;
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    } else if (hasFinished && !isOn) {
+      var _diffTime = 0;
+
+      _axios.default.put("".concat(_env.envVariables.endpointBase, "finish-task"), {
+        id: taskNumber,
+        diffTime: _diffTime,
+        stopTime: stopTime
+      }).then(function () {
+        setTaskStatus("completed");
+      }).catch(function (err) {
+        var message = err.response.data.data.message;
+        (0, _helpers.handleErrorMessage)(message, setErrorMessage);
+      });
+    }
+  }, [hasFinished]);
   return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleStartPause,
     disabled: hasFinished ? true : false
@@ -37805,15 +37827,10 @@ var App = function App() {
       stopTime = _useState16[0],
       setStopTime = _useState16[1];
 
-  var _useState17 = (0, _react.useState)(0),
+  var _useState17 = (0, _react.useState)(""),
       _useState18 = _slicedToArray(_useState17, 2),
-      diffTime = _useState18[0],
-      setDiffTime = _useState18[1];
-
-  var _useState19 = (0, _react.useState)(""),
-      _useState20 = _slicedToArray(_useState19, 2),
-      taskStatus = _useState20[0],
-      setTaskStatus = _useState20[1];
+      taskStatus = _useState18[0],
+      setTaskStatus = _useState18[1];
 
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
@@ -37834,8 +37851,6 @@ var App = function App() {
     setStartTime: setStartTime,
     stopTime: stopTime,
     setStopTime: setStopTime,
-    diffTime: diffTime,
-    setDiffTime: setDiffTime,
     taskStatus: taskStatus,
     setTaskStatus: setTaskStatus
   };

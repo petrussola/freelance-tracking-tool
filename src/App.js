@@ -31,7 +31,6 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [startTime, setStartTime] = useState(0);
   const [stopTime, setStopTime] = useState(0);
-  const [diffTime, setDiffTime] = useState(0);
   const [taskStatus, setTaskStatus] = useState("");
   const intervalRef = useRef(null);
 
@@ -53,8 +52,6 @@ const App = () => {
     setStartTime,
     stopTime,
     setStopTime,
-    diffTime,
-    setDiffTime,
     taskStatus,
     setTaskStatus,
   };
