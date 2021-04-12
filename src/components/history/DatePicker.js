@@ -42,9 +42,9 @@ export default function DatePicker() {
     const dateHigherEndParsed = Date.parse(dateHigherEnd);
     const filteredData = allTasks.filter((task) => {
       return (
-        task.startTime > dateLowerEndParsed &&
-        task.startTime < dateHigherEndParsed
-      );
+        parseInt(task.startTime, 10) > dateLowerEndParsed &&
+        parseInt(task.startTime, 10) < dateHigherEndParsed
+      ); // converting to integer because bigInt is returned as string for accuracy reasons http://knexjs.org/#Schema-bigInteger
     });
     setFilteredTasks(filteredData);
   };

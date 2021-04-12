@@ -37888,7 +37888,7 @@ function DatePicker() {
     var dateHigherEnd = new Date(parseInt(year2, 10), parseInt(month2, 10), parseInt(day2, 10));
     var dateHigherEndParsed = Date.parse(dateHigherEnd);
     var filteredData = allTasks.filter(function (task) {
-      return task.startTime > dateLowerEndParsed && task.startTime < dateHigherEndParsed;
+      return parseInt(task.startTime, 10) > dateLowerEndParsed && parseInt(task.startTime, 10) < dateHigherEndParsed; // converting to integer because bigInt is returned as string for accuracy reasons http://knexjs.org/#Schema-bigInteger
     });
     setFilteredTasks(filteredData);
   };
