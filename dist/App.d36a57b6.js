@@ -37752,16 +37752,200 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // context
 function AllTasks() {
   var _useContext = (0, _react.useContext)(_context.default),
-      allTasks = _useContext.allTasks;
+      allTasks = _useContext.allTasks,
+      filteredTasks = _useContext.filteredTasks; //   let tasks;
+  //   if (filteredTasks.length > 0) {
+  //     debugger;
+  //     tasks = filteredTasks;
+  //   } else {
+  //     debugger;
+  //     tasks = allTasks;
+  //   }
 
-  return /*#__PURE__*/_react.default.createElement("div", null, allTasks.length === 0 ? /*#__PURE__*/_react.default.createElement("div", null, "No tasks yet") : allTasks.map(function (task) {
+
+  if (allTasks.length === 0) {
+    return /*#__PURE__*/_react.default.createElement("div", null, "No tasks yet");
+  }
+
+  return /*#__PURE__*/_react.default.createElement("div", null, filteredTasks.length > 0 ? filteredTasks.map(function (task) {
+    return /*#__PURE__*/_react.default.createElement(_TaskDetail.default, {
+      task: task,
+      key: task.jobId
+    });
+  }) : allTasks.map(function (task) {
     return /*#__PURE__*/_react.default.createElement(_TaskDetail.default, {
       task: task,
       key: task.jobId
     });
   }));
 }
-},{"react":"../node_modules/react/index.js","./TaskDetail":"components/history/TaskDetail.js","../../context/context":"context/context.js"}],"components/TaskHistory.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./TaskDetail":"components/history/TaskDetail.js","../../context/context":"context/context.js"}],"components/history/DateSelector.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = DateSelector;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _context = _interopRequireDefault(require("../../context/context"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function DateSelector(_ref) {
+  var from = _ref.from,
+      to = _ref.to,
+      name = _ref.name,
+      type = _ref.type;
+
+  var _useContext = (0, _react.useContext)(_context.default),
+      datePick = _useContext.datePick,
+      setDatePick = _useContext.setDatePick;
+
+  var dates = [];
+
+  for (var i = from; i < to + 1; i++) {
+    dates.push(i);
+  }
+
+  var handleChange = function handleChange(e, name, type) {
+    e.preventDefault();
+    setDatePick(_objectSpread(_objectSpread({}, datePick), {}, _defineProperty({}, type, _objectSpread(_objectSpread({}, datePick[type]), {}, _defineProperty({}, name, e.target.value)))));
+  };
+
+  return /*#__PURE__*/_react.default.createElement("select", {
+    onChange: function onChange(e) {
+      return handleChange(e, name, type);
+    }
+  }, /*#__PURE__*/_react.default.createElement("option", {
+    value: "",
+    selected: !datePick[type][name] ? true : false
+  }, "--Choose a ".concat(name, "--")), dates.map(function (date) {
+    return /*#__PURE__*/_react.default.createElement("option", {
+      value: date,
+      key: date
+    }, name === "month" ? date + 1 : date);
+  }));
+}
+},{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/history/DatePicker.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = DatePicker;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+var _DateSelector = _interopRequireDefault(require("./DateSelector"));
+
+var _context = _interopRequireDefault(require("../../context/context"));
+
+var _templateObject;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  > select {\n    padding: 0.5rem;\n  }\n"])));
+
+function DatePicker() {
+  var _useContext = (0, _react.useContext)(_context.default),
+      allTasks = _useContext.allTasks,
+      datePick = _useContext.datePick,
+      filteredTasks = _useContext.filteredTasks,
+      setFilteredTasks = _useContext.setFilteredTasks,
+      setDatePick = _useContext.setDatePick;
+
+  var handleFilter = function handleFilter() {
+    var _datePick$from = datePick.from,
+        day1 = _datePick$from.day,
+        month1 = _datePick$from.month,
+        year1 = _datePick$from.year;
+    var _datePick$to = datePick.to,
+        day2 = _datePick$to.day,
+        month2 = _datePick$to.month,
+        year2 = _datePick$to.year;
+    var dateLowerEnd = new Date(parseInt(year1, 10), parseInt(month1, 10), parseInt(day1, 10));
+    var dateLowerEndParsed = Date.parse(dateLowerEnd);
+    var dateHigherEnd = new Date(parseInt(year2, 10), parseInt(month2, 10), parseInt(day2, 10));
+    var dateHigherEndParsed = Date.parse(dateHigherEnd);
+    var filteredData = allTasks.filter(function (task) {
+      return task.startTime > dateLowerEndParsed && task.startTime < dateHigherEndParsed;
+    });
+    setFilteredTasks(filteredData);
+  };
+
+  var clearFilter = function clearFilter() {
+    setFilteredTasks([]);
+    setDatePick({
+      from: {
+        day: undefined,
+        month: undefined,
+        year: undefined
+      },
+      to: {
+        day: undefined,
+        month: undefined,
+        year: undefined
+      }
+    });
+  };
+
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, "From:", /*#__PURE__*/_react.default.createElement(_DateSelector.default, {
+    from: 1,
+    to: 31,
+    name: "day",
+    type: "from"
+  }), /*#__PURE__*/_react.default.createElement(_DateSelector.default, {
+    from: 0,
+    to: 11,
+    name: "month",
+    type: "from"
+  }), /*#__PURE__*/_react.default.createElement(_DateSelector.default, {
+    from: 2021,
+    to: 2021,
+    name: "year",
+    type: "from"
+  }), "To:", /*#__PURE__*/_react.default.createElement(_DateSelector.default, {
+    from: 1,
+    to: 31,
+    name: "day",
+    type: "to"
+  }), /*#__PURE__*/_react.default.createElement(_DateSelector.default, {
+    from: 0,
+    to: 11,
+    name: "month",
+    type: "to"
+  }), /*#__PURE__*/_react.default.createElement(_DateSelector.default, {
+    from: 2021,
+    to: 2021,
+    name: "year",
+    type: "to"
+  }), filteredTasks.length === 0 ? /*#__PURE__*/_react.default.createElement("button", {
+    onClick: handleFilter
+  }, "Filter") : /*#__PURE__*/_react.default.createElement("button", {
+    onClick: clearFilter
+  }, "Clear filter"));
+}
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./DateSelector":"components/history/DateSelector.js","../../context/context":"context/context.js"}],"components/TaskHistory.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37778,6 +37962,8 @@ var _axios = _interopRequireDefault(require("axios"));
 var _BackHomeButton = _interopRequireDefault(require("./history/BackHomeButton"));
 
 var _AllTasks = _interopRequireDefault(require("./history/AllTasks"));
+
+var _DatePicker = _interopRequireDefault(require("./history/DatePicker"));
 
 var _context = _interopRequireDefault(require("../context/context"));
 
@@ -37800,8 +37986,9 @@ var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObjec
 function TaskHistory() {
   var _useContext = (0, _react.useContext)(_context.default),
       setAllTasks = _useContext.setAllTasks,
-      setErrorMessage = _useContext.setErrorMessage; // truggers useEffect in App.js and downloads the latest info from database. It may have been stalled since the time User loaded data from DB (change name, change lenght of task, etc.)
-
+      setErrorMessage = _useContext.setErrorMessage,
+      datePick = _useContext.datePick,
+      setDatePick = _useContext.setDatePick;
 
   (0, _react.useEffect)(function () {
     _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
@@ -37811,9 +37998,9 @@ function TaskHistory() {
       (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
     });
   }, []);
-  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_AllTasks.default, null), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_DatePicker.default, null), /*#__PURE__*/_react.default.createElement(_AllTasks.default, null), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
 }
-},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","axios":"../node_modules/axios/index.js","./history/BackHomeButton":"components/history/BackHomeButton.js","./history/AllTasks":"components/history/AllTasks.js","../context/context":"context/context.js","../../config/env":"../config/env.js","../helpers/helpers":"helpers/helpers.js"}],"components/NotFound.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","axios":"../node_modules/axios/index.js","./history/BackHomeButton":"components/history/BackHomeButton.js","./history/AllTasks":"components/history/AllTasks.js","./history/DatePicker":"components/history/DatePicker.js","../context/context":"context/context.js","../../config/env":"../config/env.js","../helpers/helpers":"helpers/helpers.js"}],"components/NotFound.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37968,6 +38155,27 @@ var App = function App() {
       allTasks = _useState24[0],
       setAllTasks = _useState24[1];
 
+  var _useState25 = (0, _react.useState)([]),
+      _useState26 = _slicedToArray(_useState25, 2),
+      filteredTasks = _useState26[0],
+      setFilteredTasks = _useState26[1];
+
+  var _useState27 = (0, _react.useState)({
+    from: {
+      day: undefined,
+      month: undefined,
+      year: undefined
+    },
+    to: {
+      day: undefined,
+      month: undefined,
+      year: undefined
+    }
+  }),
+      _useState28 = _slicedToArray(_useState27, 2),
+      datePick = _useState28[0],
+      setDatePick = _useState28[1];
+
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
     hasStarted: hasStarted,
@@ -37994,7 +38202,11 @@ var App = function App() {
     toastMessage: toastMessage,
     setToastMessage: setToastMessage,
     allTasks: allTasks,
-    setAllTasks: setAllTasks
+    setAllTasks: setAllTasks,
+    datePick: datePick,
+    setDatePick: setDatePick,
+    filteredTasks: filteredTasks,
+    setFilteredTasks: setFilteredTasks
   };
   return /*#__PURE__*/_react.default.createElement(_context.default.Provider, {
     value: valueContext
@@ -38030,7 +38242,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56514" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59005" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

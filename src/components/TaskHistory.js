@@ -5,6 +5,7 @@ import axios from "axios";
 // components
 import BackHomeButton from "./history/BackHomeButton";
 import AllTasks from "./history/AllTasks";
+import DatePicker from "./history/DatePicker";
 
 // context
 import TimerContext from "../context/context";
@@ -23,8 +24,10 @@ const StyledDiv = styled.div`
 `;
 
 export default function TaskHistory() {
-  const { setAllTasks, setErrorMessage } = useContext(TimerContext);
-  // truggers useEffect in App.js and downloads the latest info from database. It may have been stalled since the time User loaded data from DB (change name, change lenght of task, etc.)
+  const { setAllTasks, setErrorMessage, datePick, setDatePick } = useContext(
+    TimerContext
+  );
+
   useEffect(() => {
     axios
       .get(`${envVariables.endpointBase}tasks`)
@@ -39,6 +42,7 @@ export default function TaskHistory() {
 
   return (
     <StyledDiv>
+      <DatePicker />
       <AllTasks />
       <BackHomeButton />
     </StyledDiv>
