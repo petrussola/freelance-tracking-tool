@@ -1,12 +1,26 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import axios from "axios";
 
 // context
 import TimerContext from "../../context/context";
 
+// env variables
+import { envVariables } from "../../../config/env";
+
+// helpers
+import { handleDisplayMessage } from "../../helpers/helpers";
+
 export default function InputField() {
   const [inputField, setInputField] = useState("");
-  const [nameTask, setNameTask] = useState("");
-  const { taskNumber, taskStatus } = useContext(TimerContext);
+  const {
+    taskNumber,
+    taskStatus,
+    nameTask,
+    setNameTask,
+    hasStarted,
+    setErrorMessage,
+    setToastMessage,
+  } = useContext(TimerContext);
 
   const handleName = (e) => {
     if (e.code === "Enter") {
@@ -17,6 +31,26 @@ export default function InputField() {
   const editName = () => {
     setNameTask("");
   };
+
+  useEffect(() => {
+    if (hasStarted && nameTask.length > 0) {
+      axios
+        .put(`${envVariables.endpointBase}edit-name`, {
+          name: nameTask,
+          id: taskNumber,
+        })
+        .then(() => {
+          handleDisplayMessage(
+            "Name of the task has been changed",
+            setToastMessage
+          );
+        })
+        .catch((err) => {
+          const { message } = err.response.data.data;
+          handleDisplayMessage(message, setErrorMessage);
+        });
+    }
+  }, [nameTask]);
 
   return (
     <div>

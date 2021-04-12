@@ -1,3 +1,3 @@
-export const handleErrorMessage = (message, cb) => {
+export const handleDisplayMessage = (message, cb) => {
   return cb(message);
 };

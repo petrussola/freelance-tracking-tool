@@ -35680,13 +35680,13 @@ var _react = require("react");
 var TimerContext = (0, _react.createContext)();
 var _default = TimerContext;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"components/ErrorMessage.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js"}],"components/DisplayMessage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = ErrorMessage;
+exports.default = DisplayMessage;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -35704,120 +35704,22 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  width: 25%;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  min-height: 3rem;\n  &.display-error {\n    color: white;\n    background-color: red;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  width: 25%;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  min-height: 3rem;\n  &.display-error {\n    color: white;\n    background-color: red;\n  }\n  &.display-toast {\n    color: white;\n    background-color: green;\n  }\n"])));
 
-function ErrorMessage() {
+function DisplayMessage() {
   var _useContext = (0, _react.useContext)(_context.default),
-      errorMessage = _useContext.errorMessage;
+      errorMessage = _useContext.errorMessage,
+      toastMessage = _useContext.toastMessage;
 
-  if (errorMessage.length === 0) {
+  if (errorMessage.length === 0 && toastMessage.length === 0) {
     return /*#__PURE__*/_react.default.createElement(StyledDiv, null);
   }
 
   return /*#__PURE__*/_react.default.createElement(StyledDiv, {
-    className: "display-error"
-  }, errorMessage);
+    className: errorMessage.length > 0 ? "display-error" : "display-toast"
+  }, errorMessage.length > 0 ? errorMessage : toastMessage);
 }
-},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","../context/context":"context/context.js"}],"components/createtask/InputField.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = InputField;
-
-var _react = _interopRequireWildcard(require("react"));
-
-var _context = _interopRequireDefault(require("../../context/context"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function InputField() {
-  var _useState = (0, _react.useState)(""),
-      _useState2 = _slicedToArray(_useState, 2),
-      inputField = _useState2[0],
-      setInputField = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(""),
-      _useState4 = _slicedToArray(_useState3, 2),
-      nameTask = _useState4[0],
-      setNameTask = _useState4[1];
-
-  var _useContext = (0, _react.useContext)(_context.default),
-      taskNumber = _useContext.taskNumber,
-      taskStatus = _useContext.taskStatus;
-
-  var handleName = function handleName(e) {
-    if (e.code === "Enter") {
-      setNameTask(inputField);
-    }
-  };
-
-  var editName = function editName() {
-    setNameTask("");
-  };
-
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("form", null, nameTask.length > 0 ? nameTask : /*#__PURE__*/_react.default.createElement("input", {
-    name: "nameTask",
-    placeholder: "Name your task",
-    value: inputField,
-    onChange: function onChange(e) {
-      return setInputField(e.target.value);
-    },
-    onKeyDown: handleName
-  }), nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("button", {
-    onClick: editName
-  }, "Edit") : null, taskNumber > 0 ? "Task number ".concat(taskNumber) : null, taskStatus.length > 0 ? "Status: ".concat(taskStatus) : null));
-}
-},{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/createtask/ShowTimeSpent.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = ShowTimeSpent;
-
-var _react = _interopRequireWildcard(require("react"));
-
-var _context = _interopRequireDefault(require("../../context/context"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-// context
-function ShowTimeSpent() {
-  var _useContext = (0, _react.useContext)(_context.default),
-      timeElapsed = _useContext.timeElapsed;
-
-  var padTime = function padTime(time) {
-    return time.toString().padStart(2, "0");
-  };
-
-  var hours = padTime(Math.floor(timeElapsed / 60 / 60));
-  var minutes = Math.floor(timeElapsed / 60);
-  var seconds = padTime(timeElapsed - minutes * 60);
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", null, hours), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, padTime(minutes % 60)), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, seconds));
-}
-},{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","../context/context":"context/context.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -37425,14 +37327,132 @@ exports.envVariables = envVariables;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.handleErrorMessage = void 0;
+exports.handleDisplayMessage = void 0;
 
-var handleErrorMessage = function handleErrorMessage(message, cb) {
+var handleDisplayMessage = function handleDisplayMessage(message, cb) {
   return cb(message);
 };
 
-exports.handleErrorMessage = handleErrorMessage;
-},{}],"components/createtask/TimerControls.js":[function(require,module,exports) {
+exports.handleDisplayMessage = handleDisplayMessage;
+},{}],"components/createtask/InputField.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = InputField;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _context = _interopRequireDefault(require("../../context/context"));
+
+var _env = require("../../../config/env");
+
+var _helpers = require("../../helpers/helpers");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function InputField() {
+  var _useState = (0, _react.useState)(""),
+      _useState2 = _slicedToArray(_useState, 2),
+      inputField = _useState2[0],
+      setInputField = _useState2[1];
+
+  var _useContext = (0, _react.useContext)(_context.default),
+      taskNumber = _useContext.taskNumber,
+      taskStatus = _useContext.taskStatus,
+      nameTask = _useContext.nameTask,
+      setNameTask = _useContext.setNameTask,
+      hasStarted = _useContext.hasStarted,
+      setErrorMessage = _useContext.setErrorMessage,
+      setToastMessage = _useContext.setToastMessage;
+
+  var handleName = function handleName(e) {
+    if (e.code === "Enter") {
+      setNameTask(inputField);
+    }
+  };
+
+  var editName = function editName() {
+    setNameTask("");
+  };
+
+  (0, _react.useEffect)(function () {
+    if (hasStarted && nameTask.length > 0) {
+      _axios.default.put("".concat(_env.envVariables.endpointBase, "edit-name"), {
+        name: nameTask,
+        id: taskNumber
+      }).then(function () {
+        (0, _helpers.handleDisplayMessage)("Name of the task has been changed", setToastMessage);
+      }).catch(function (err) {
+        var message = err.response.data.data.message;
+        (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
+      });
+    }
+  }, [nameTask]);
+  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("form", null, nameTask.length > 0 ? nameTask : /*#__PURE__*/_react.default.createElement("input", {
+    name: "nameTask",
+    placeholder: "Name your task",
+    value: inputField,
+    onChange: function onChange(e) {
+      return setInputField(e.target.value);
+    },
+    onKeyDown: handleName
+  }), nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("button", {
+    onClick: editName
+  }, "Edit") : null, taskNumber > 0 ? "Task number ".concat(taskNumber) : null, taskStatus.length > 0 ? "Status: ".concat(taskStatus) : null));
+}
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../context/context":"context/context.js","../../../config/env":"../config/env.js","../../helpers/helpers":"helpers/helpers.js"}],"components/createtask/ShowTimeSpent.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = ShowTimeSpent;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _context = _interopRequireDefault(require("../../context/context"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+// context
+function ShowTimeSpent() {
+  var _useContext = (0, _react.useContext)(_context.default),
+      timeElapsed = _useContext.timeElapsed;
+
+  var padTime = function padTime(time) {
+    return time.toString().padStart(2, "0");
+  };
+
+  var hours = padTime(Math.floor(timeElapsed / 60 / 60));
+  var minutes = Math.floor(timeElapsed / 60);
+  var seconds = padTime(timeElapsed - minutes * 60);
+  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", null, hours), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, padTime(minutes % 60)), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, seconds));
+}
+},{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/createtask/TimerControls.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37476,7 +37496,8 @@ function TimerControls() {
       setStartTime = _useContext.setStartTime,
       stopTime = _useContext.stopTime,
       setStopTime = _useContext.setStopTime,
-      setTaskStatus = _useContext.setTaskStatus;
+      setTaskStatus = _useContext.setTaskStatus,
+      nameTask = _useContext.nameTask;
 
   var handleStartPause = function handleStartPause() {
     if (!hasStarted && !isOn) {
@@ -37521,7 +37542,7 @@ function TimerControls() {
       setIsOn(true);
 
       _axios.default.post("".concat(_env.envVariables.endpointBase, "create-task"), {
-        name: "test",
+        name: nameTask,
         startTime: startTime
       }).then(function (res) {
         var id; // get id back and set local state
@@ -37573,7 +37594,7 @@ function TimerControls() {
         diffTime: diffTime
       }).then(function () {}).catch(function (err) {
         var message = err.response.data.data.message;
-        (0, _helpers.handleErrorMessage)(message, setErrorMessage);
+        (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
       }).finally(function () {
         setTaskStatus("paused");
         if (intervalRef.current === null) return;
@@ -37594,7 +37615,7 @@ function TimerControls() {
         setTaskStatus("completed");
       }).catch(function (err) {
         var message = err.response.data.data.message;
-        (0, _helpers.handleErrorMessage)(message, setErrorMessage);
+        (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
       });
 
       setIsOn(false);
@@ -37612,7 +37633,7 @@ function TimerControls() {
         setTaskStatus("completed");
       }).catch(function (err) {
         var message = err.response.data.data.message;
-        (0, _helpers.handleErrorMessage)(message, setErrorMessage);
+        (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
       });
     }
   }, [hasFinished]);
@@ -37756,7 +37777,7 @@ var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 var _NavBar = _interopRequireDefault(require("./components/NavBar"));
 
-var _ErrorMessage = _interopRequireDefault(require("./components/ErrorMessage"));
+var _DisplayMessage = _interopRequireDefault(require("./components/DisplayMessage"));
 
 var _Routes = _interopRequireDefault(require("./routes/Routes"));
 
@@ -37814,23 +37835,33 @@ var App = function App() {
 
   var _useState11 = (0, _react.useState)(""),
       _useState12 = _slicedToArray(_useState11, 2),
-      errorMessage = _useState12[0],
-      setErrorMessage = _useState12[1];
+      nameTask = _useState12[0],
+      setNameTask = _useState12[1];
 
-  var _useState13 = (0, _react.useState)(0),
+  var _useState13 = (0, _react.useState)(""),
       _useState14 = _slicedToArray(_useState13, 2),
-      startTime = _useState14[0],
-      setStartTime = _useState14[1];
+      errorMessage = _useState14[0],
+      setErrorMessage = _useState14[1];
 
-  var _useState15 = (0, _react.useState)(0),
+  var _useState15 = (0, _react.useState)(""),
       _useState16 = _slicedToArray(_useState15, 2),
-      stopTime = _useState16[0],
-      setStopTime = _useState16[1];
+      toastMessage = _useState16[0],
+      setToastMessage = _useState16[1];
 
-  var _useState17 = (0, _react.useState)(""),
+  var _useState17 = (0, _react.useState)(0),
       _useState18 = _slicedToArray(_useState17, 2),
-      taskStatus = _useState18[0],
-      setTaskStatus = _useState18[1];
+      startTime = _useState18[0],
+      setStartTime = _useState18[1];
+
+  var _useState19 = (0, _react.useState)(0),
+      _useState20 = _slicedToArray(_useState19, 2),
+      stopTime = _useState20[0],
+      setStopTime = _useState20[1];
+
+  var _useState21 = (0, _react.useState)(""),
+      _useState22 = _slicedToArray(_useState21, 2),
+      taskStatus = _useState22[0],
+      setTaskStatus = _useState22[1];
 
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
@@ -37852,15 +37883,19 @@ var App = function App() {
     stopTime: stopTime,
     setStopTime: setStopTime,
     taskStatus: taskStatus,
-    setTaskStatus: setTaskStatus
+    setTaskStatus: setTaskStatus,
+    nameTask: nameTask,
+    setNameTask: setNameTask,
+    toastMessage: toastMessage,
+    setToastMessage: setToastMessage
   };
   return /*#__PURE__*/_react.default.createElement(_context.default.Provider, {
     value: valueContext
-  }, /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_NavBar.default, null), /*#__PURE__*/_react.default.createElement(_ErrorMessage.default, null), /*#__PURE__*/_react.default.createElement(_Routes.default, null)));
+  }, /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_NavBar.default, null), /*#__PURE__*/_react.default.createElement(_DisplayMessage.default, null), /*#__PURE__*/_react.default.createElement(_Routes.default, null)));
 };
 
 (0, _reactDom.render)( /*#__PURE__*/_react.default.createElement(_reactRouterDom.BrowserRouter, null, /*#__PURE__*/_react.default.createElement(App, null)), document.getElementById("root"));
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./components/NavBar":"components/NavBar.js","./components/ErrorMessage":"components/ErrorMessage.js","./routes/Routes":"routes/Routes.js","./context/context":"context/context.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./components/NavBar":"components/NavBar.js","./components/DisplayMessage":"components/DisplayMessage.js","./routes/Routes":"routes/Routes.js","./context/context":"context/context.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -37888,7 +37923,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62231" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62642" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

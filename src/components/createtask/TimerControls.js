@@ -8,7 +8,7 @@ import TimerContext from "../../context/context";
 import { envVariables } from "../../../config/env";
 
 // helpers
-import { handleErrorMessage } from "../../helpers/helpers";
+import { handleDisplayMessage } from "../../helpers/helpers";
 
 export default function TimerControls() {
   const {
@@ -28,6 +28,7 @@ export default function TimerControls() {
     stopTime,
     setStopTime,
     setTaskStatus,
+    nameTask,
   } = useContext(TimerContext);
 
   const handleStartPause = () => {
@@ -72,7 +73,7 @@ export default function TimerControls() {
       setIsOn(true);
       axios
         .post(`${envVariables.endpointBase}create-task`, {
-          name: "test",
+          name: nameTask,
           startTime,
         })
         .then((res) => {
@@ -124,7 +125,7 @@ export default function TimerControls() {
         .then(() => {})
         .catch((err) => {
           const { message } = err.response.data.data;
-          handleErrorMessage(message, setErrorMessage);
+          handleDisplayMessage(message, setErrorMessage);
         })
         .finally(() => {
           setTaskStatus("paused");
@@ -149,7 +150,7 @@ export default function TimerControls() {
         })
         .catch((err) => {
           const { message } = err.response.data.data;
-          handleErrorMessage(message, setErrorMessage);
+          handleDisplayMessage(message, setErrorMessage);
         });
       setIsOn(false);
       if (intervalRef.current === null) return;
@@ -168,7 +169,7 @@ export default function TimerControls() {
         })
         .catch((err) => {
           const { message } = err.response.data.data;
-          handleErrorMessage(message, setErrorMessage);
+          handleDisplayMessage(message, setErrorMessage);
         });
     }
   }, [hasFinished]);
