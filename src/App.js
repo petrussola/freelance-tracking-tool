@@ -3,6 +3,7 @@ import { render } from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import styled from "styled-components";
 
+
 // components
 import NavBar from "./components/NavBar";
 import DisplayMessage from "./components/DisplayMessage";
@@ -34,6 +35,7 @@ const App = () => {
   const [startTime, setStartTime] = useState(0);
   const [stopTime, setStopTime] = useState(0);
   const [taskStatus, setTaskStatus] = useState("");
+  const [allTasks, setAllTasks] = useState([]);
   const intervalRef = useRef(null);
 
   const valueContext = {
@@ -60,6 +62,8 @@ const App = () => {
     setNameTask,
     toastMessage,
     setToastMessage,
+    allTasks,
+    setAllTasks,
   };
 
   return (

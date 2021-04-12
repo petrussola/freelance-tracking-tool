@@ -1,7 +1,7 @@
 import React from "react";
 
 // components
-import BackHomeButton from "./BackHomeButton";
+import BackHomeButton from "./history/BackHomeButton";
 
 export default function NotFound() {
   return (

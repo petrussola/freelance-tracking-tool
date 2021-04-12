@@ -37676,7 +37676,7 @@ var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObjec
 function CreateTask() {
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_InputField.default, null), /*#__PURE__*/_react.default.createElement(_ShowTimeSpent.default, null), /*#__PURE__*/_react.default.createElement(_TimerControls.default, null));
 }
-},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./createtask/InputField":"components/createtask/InputField.js","./createtask/ShowTimeSpent":"components/createtask/ShowTimeSpent.js","./createtask/TimerControls":"components/createtask/TimerControls.js"}],"components/BackHomeButton.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./createtask/InputField":"components/createtask/InputField.js","./createtask/ShowTimeSpent":"components/createtask/ShowTimeSpent.js","./createtask/TimerControls":"components/createtask/TimerControls.js"}],"components/history/BackHomeButton.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37695,7 +37695,73 @@ function BackHomeButton() {
     to: "/"
   }, "Back Home Page");
 }
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/TaskHistory.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/history/TaskDetail.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = TaskDetail;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+var _reactRouterDom = require("react-router-dom");
+
+var _templateObject;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start;\n  align-items: center;\n  section {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-start;\n    align-items: center;\n  }\n"])));
+
+function TaskDetail(_ref) {
+  var task = _ref.task;
+  var length = task.length,
+      isFinished = task.isFinished;
+  var lenghtInNumb = parseInt(length, 10); // because Postgres returns bigint data in string for accuracy reasons http://knexjs.org/#Schema-bigInteger
+
+  var dateObject = new Date(lenghtInNumb);
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("section", null, /*#__PURE__*/_react.default.createElement("h1", null, "".concat(task.name ? task.name : "No name yet", " |  ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished")), !isFinished ? /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    to: "/"
+  }, /*#__PURE__*/_react.default.createElement("button", null, "Go to task")) : null));
+}
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/history/AllTasks.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = AllTasks;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _TaskDetail = _interopRequireDefault(require("./TaskDetail"));
+
+var _context = _interopRequireDefault(require("../../context/context"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+// components
+// context
+function AllTasks() {
+  var _useContext = (0, _react.useContext)(_context.default),
+      allTasks = _useContext.allTasks;
+
+  return /*#__PURE__*/_react.default.createElement("div", null, allTasks.length === 0 ? /*#__PURE__*/_react.default.createElement("div", null, "No tasks yet") : allTasks.map(function (task) {
+    return /*#__PURE__*/_react.default.createElement(_TaskDetail.default, {
+      task: task,
+      key: task.jobId
+    });
+  }));
+}
+},{"react":"../node_modules/react/index.js","./TaskDetail":"components/history/TaskDetail.js","../../context/context":"context/context.js"}],"components/TaskHistory.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37703,17 +37769,51 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = TaskHistory;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
-var _BackHomeButton = _interopRequireDefault(require("./BackHomeButton"));
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _BackHomeButton = _interopRequireDefault(require("./history/BackHomeButton"));
+
+var _AllTasks = _interopRequireDefault(require("./history/AllTasks"));
+
+var _context = _interopRequireDefault(require("../context/context"));
+
+var _env = require("../../config/env");
+
+var _helpers = require("../helpers/helpers");
+
+var _templateObject;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// components
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"])));
+
 function TaskHistory() {
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h1", null, "I am the history of tasks"), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
+  var _useContext = (0, _react.useContext)(_context.default),
+      setAllTasks = _useContext.setAllTasks,
+      setErrorMessage = _useContext.setErrorMessage; // truggers useEffect in App.js and downloads the latest info from database. It may have been stalled since the time User loaded data from DB (change name, change lenght of task, etc.)
+
+
+  (0, _react.useEffect)(function () {
+    _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
+      setAllTasks(res.data.data);
+    }).catch(function (err) {
+      var message = err.response.data.data.message;
+      (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
+    });
+  }, []);
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_AllTasks.default, null), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
 }
-},{"react":"../node_modules/react/index.js","./BackHomeButton":"components/BackHomeButton.js"}],"components/NotFound.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","axios":"../node_modules/axios/index.js","./history/BackHomeButton":"components/history/BackHomeButton.js","./history/AllTasks":"components/history/AllTasks.js","../context/context":"context/context.js","../../config/env":"../config/env.js","../helpers/helpers":"helpers/helpers.js"}],"components/NotFound.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37723,7 +37823,7 @@ exports.default = NotFound;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _BackHomeButton = _interopRequireDefault(require("./BackHomeButton"));
+var _BackHomeButton = _interopRequireDefault(require("./history/BackHomeButton"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37731,7 +37831,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function NotFound() {
   return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h1", null, "404 not found"), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
 }
-},{"react":"../node_modules/react/index.js","./BackHomeButton":"components/BackHomeButton.js"}],"routes/Routes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./history/BackHomeButton":"components/history/BackHomeButton.js"}],"routes/Routes.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37863,6 +37963,11 @@ var App = function App() {
       taskStatus = _useState22[0],
       setTaskStatus = _useState22[1];
 
+  var _useState23 = (0, _react.useState)([]),
+      _useState24 = _slicedToArray(_useState23, 2),
+      allTasks = _useState24[0],
+      setAllTasks = _useState24[1];
+
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
     hasStarted: hasStarted,
@@ -37887,7 +37992,9 @@ var App = function App() {
     nameTask: nameTask,
     setNameTask: setNameTask,
     toastMessage: toastMessage,
-    setToastMessage: setToastMessage
+    setToastMessage: setToastMessage,
+    allTasks: allTasks,
+    setAllTasks: setAllTasks
   };
   return /*#__PURE__*/_react.default.createElement(_context.default.Provider, {
     value: valueContext
@@ -37923,7 +38030,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62642" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56514" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
