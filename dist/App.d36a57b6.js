@@ -37330,7 +37330,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.handleDisplayMessage = void 0;
 
 var handleDisplayMessage = function handleDisplayMessage(message, cb) {
-  return cb(message);
+  cb(message);
+  return setTimeout(function () {
+    cb("");
+  }, 3000);
 };
 
 exports.handleDisplayMessage = handleDisplayMessage;
@@ -37358,24 +37361,10 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
+// context
+// env variables
+// helpers
 function InputField() {
-  var _useState = (0, _react.useState)(""),
-      _useState2 = _slicedToArray(_useState, 2),
-      inputField = _useState2[0],
-      setInputField = _useState2[1];
-
   var _useContext = (0, _react.useContext)(_context.default),
       taskNumber = _useContext.taskNumber,
       taskStatus = _useContext.taskStatus,
@@ -37383,7 +37372,9 @@ function InputField() {
       setNameTask = _useContext.setNameTask,
       hasStarted = _useContext.hasStarted,
       setErrorMessage = _useContext.setErrorMessage,
-      setToastMessage = _useContext.setToastMessage;
+      setToastMessage = _useContext.setToastMessage,
+      inputField = _useContext.inputField,
+      setInputField = _useContext.setInputField;
 
   var handleName = function handleName(e) {
     if (e.code === "Enter") {
@@ -37492,12 +37483,15 @@ function TimerControls() {
       taskNumber = _useContext.taskNumber,
       setTaskNumber = _useContext.setTaskNumber,
       setErrorMessage = _useContext.setErrorMessage,
+      setToastMessage = _useContext.setToastMessage,
       startTime = _useContext.startTime,
       setStartTime = _useContext.setStartTime,
       stopTime = _useContext.stopTime,
       setStopTime = _useContext.setStopTime,
       setTaskStatus = _useContext.setTaskStatus,
-      nameTask = _useContext.nameTask;
+      nameTask = _useContext.nameTask,
+      setNameTask = _useContext.setNameTask,
+      setInputField = _useContext.setInputField;
 
   var handleStartPause = function handleStartPause() {
     if (!hasStarted && !isOn) {
@@ -37534,6 +37528,8 @@ function TimerControls() {
     setStartTime(0);
     setStopTime(0);
     setTaskStatus("");
+    setNameTask("");
+    setInputField("");
   };
 
   (0, _react.useEffect)(function () {
@@ -37986,9 +37982,7 @@ var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObjec
 function TaskHistory() {
   var _useContext = (0, _react.useContext)(_context.default),
       setAllTasks = _useContext.setAllTasks,
-      setErrorMessage = _useContext.setErrorMessage,
-      datePick = _useContext.datePick,
-      setDatePick = _useContext.setDatePick;
+      setErrorMessage = _useContext.setErrorMessage;
 
   (0, _react.useEffect)(function () {
     _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
@@ -38122,45 +38116,50 @@ var App = function App() {
 
   var _useState11 = (0, _react.useState)(""),
       _useState12 = _slicedToArray(_useState11, 2),
-      nameTask = _useState12[0],
-      setNameTask = _useState12[1];
+      inputField = _useState12[0],
+      setInputField = _useState12[1];
 
   var _useState13 = (0, _react.useState)(""),
       _useState14 = _slicedToArray(_useState13, 2),
-      errorMessage = _useState14[0],
-      setErrorMessage = _useState14[1];
+      nameTask = _useState14[0],
+      setNameTask = _useState14[1];
 
   var _useState15 = (0, _react.useState)(""),
       _useState16 = _slicedToArray(_useState15, 2),
-      toastMessage = _useState16[0],
-      setToastMessage = _useState16[1];
+      errorMessage = _useState16[0],
+      setErrorMessage = _useState16[1];
 
-  var _useState17 = (0, _react.useState)(0),
+  var _useState17 = (0, _react.useState)(""),
       _useState18 = _slicedToArray(_useState17, 2),
-      startTime = _useState18[0],
-      setStartTime = _useState18[1];
+      toastMessage = _useState18[0],
+      setToastMessage = _useState18[1];
 
   var _useState19 = (0, _react.useState)(0),
       _useState20 = _slicedToArray(_useState19, 2),
-      stopTime = _useState20[0],
-      setStopTime = _useState20[1];
+      startTime = _useState20[0],
+      setStartTime = _useState20[1];
 
-  var _useState21 = (0, _react.useState)(""),
+  var _useState21 = (0, _react.useState)(0),
       _useState22 = _slicedToArray(_useState21, 2),
-      taskStatus = _useState22[0],
-      setTaskStatus = _useState22[1];
+      stopTime = _useState22[0],
+      setStopTime = _useState22[1];
 
-  var _useState23 = (0, _react.useState)([]),
+  var _useState23 = (0, _react.useState)(""),
       _useState24 = _slicedToArray(_useState23, 2),
-      allTasks = _useState24[0],
-      setAllTasks = _useState24[1];
+      taskStatus = _useState24[0],
+      setTaskStatus = _useState24[1];
 
   var _useState25 = (0, _react.useState)([]),
       _useState26 = _slicedToArray(_useState25, 2),
-      filteredTasks = _useState26[0],
-      setFilteredTasks = _useState26[1];
+      allTasks = _useState26[0],
+      setAllTasks = _useState26[1];
 
-  var _useState27 = (0, _react.useState)({
+  var _useState27 = (0, _react.useState)([]),
+      _useState28 = _slicedToArray(_useState27, 2),
+      filteredTasks = _useState28[0],
+      setFilteredTasks = _useState28[1];
+
+  var _useState29 = (0, _react.useState)({
     from: {
       day: undefined,
       month: undefined,
@@ -38172,9 +38171,9 @@ var App = function App() {
       year: undefined
     }
   }),
-      _useState28 = _slicedToArray(_useState27, 2),
-      datePick = _useState28[0],
-      setDatePick = _useState28[1];
+      _useState30 = _slicedToArray(_useState29, 2),
+      datePick = _useState30[0],
+      setDatePick = _useState30[1];
 
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
@@ -38206,7 +38205,9 @@ var App = function App() {
     datePick: datePick,
     setDatePick: setDatePick,
     filteredTasks: filteredTasks,
-    setFilteredTasks: setFilteredTasks
+    setFilteredTasks: setFilteredTasks,
+    inputField: inputField,
+    setInputField: setInputField
   };
   return /*#__PURE__*/_react.default.createElement(_context.default.Provider, {
     value: valueContext

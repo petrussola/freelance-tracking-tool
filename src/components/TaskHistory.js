@@ -24,9 +24,7 @@ const StyledDiv = styled.div`
 `;
 
 export default function TaskHistory() {
-  const { setAllTasks, setErrorMessage, datePick, setDatePick } = useContext(
-    TimerContext
-  );
+  const { setAllTasks, setErrorMessage } = useContext(TimerContext);
 
   useEffect(() => {
     axios

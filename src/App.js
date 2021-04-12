@@ -28,6 +28,7 @@ const App = () => {
   const [hasFinished, setHasFinished] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [taskNumber, setTaskNumber] = useState(0);
+  const [inputField, setInputField] = useState("");
   const [nameTask, setNameTask] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [toastMessage, setToastMessage] = useState("");
@@ -80,6 +81,8 @@ const App = () => {
     setDatePick,
     filteredTasks,
     setFilteredTasks,
+    inputField,
+    setInputField,
   };
 
   return (

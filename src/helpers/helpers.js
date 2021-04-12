@@ -1,3 +1,6 @@
 export const handleDisplayMessage = (message, cb) => {
-  return cb(message);
+  cb(message);
+  return setTimeout(() => {
+    cb("");
+  }, 3000);
 };

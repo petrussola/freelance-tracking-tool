@@ -23,12 +23,15 @@ export default function TimerControls() {
     taskNumber,
     setTaskNumber,
     setErrorMessage,
+    setToastMessage,
     startTime,
     setStartTime,
     stopTime,
     setStopTime,
     setTaskStatus,
     nameTask,
+    setNameTask,
+    setInputField,
   } = useContext(TimerContext);
 
   const handleStartPause = () => {
@@ -65,6 +68,8 @@ export default function TimerControls() {
     setStartTime(0);
     setStopTime(0);
     setTaskStatus("");
+    setNameTask("");
+    setInputField("");
   };
 
   useEffect(() => {

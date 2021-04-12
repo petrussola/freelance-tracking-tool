@@ -11,7 +11,6 @@ import { envVariables } from "../../../config/env";
 import { handleDisplayMessage } from "../../helpers/helpers";
 
 export default function InputField() {
-  const [inputField, setInputField] = useState("");
   const {
     taskNumber,
     taskStatus,
@@ -20,6 +19,8 @@ export default function InputField() {
     hasStarted,
     setErrorMessage,
     setToastMessage,
+    inputField,
+    setInputField,
   } = useContext(TimerContext);
 
   const handleName = (e) => {
