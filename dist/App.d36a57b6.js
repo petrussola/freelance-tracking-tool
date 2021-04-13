@@ -37327,7 +37327,7 @@ exports.envVariables = envVariables;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.handleDisplayMessage = void 0;
+exports.resetTask = exports.handleDisplayMessage = void 0;
 
 var handleDisplayMessage = function handleDisplayMessage(message, cb) {
   cb(message);
@@ -37337,6 +37337,14 @@ var handleDisplayMessage = function handleDisplayMessage(message, cb) {
 };
 
 exports.handleDisplayMessage = handleDisplayMessage;
+
+var resetTask = function resetTask(message, cbs) {
+  return cbs.forEach(function (cb) {
+    return cb(message);
+  });
+};
+
+exports.resetTask = resetTask;
 },{}],"components/createtask/InputField.js":[function(require,module,exports) {
 "use strict";
 
@@ -37483,7 +37491,6 @@ function TimerControls() {
       taskNumber = _useContext.taskNumber,
       setTaskNumber = _useContext.setTaskNumber,
       setErrorMessage = _useContext.setErrorMessage,
-      setToastMessage = _useContext.setToastMessage,
       startTime = _useContext.startTime,
       setStartTime = _useContext.setStartTime,
       stopTime = _useContext.stopTime,
@@ -37544,9 +37551,9 @@ function TimerControls() {
         var id; // get id back and set local state
 
         if (res.data.data.id.jobId) {
-          id = res.data.data.id.jobId;
+          id = res.data.data.id.jobId; // postgres
         } else {
-          id = res.data.data.id;
+          id = res.data.data.id; // sqlite
         }
 
         setTaskNumber(id);
@@ -37651,7 +37658,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = CreateTask;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
@@ -37661,18 +37668,46 @@ var _ShowTimeSpent = _interopRequireDefault(require("./createtask/ShowTimeSpent"
 
 var _TimerControls = _interopRequireDefault(require("./createtask/TimerControls"));
 
+var _context = _interopRequireDefault(require("../context/context"));
+
+var _helpers = require("../helpers/helpers");
+
 var _templateObject;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  border: 5px solid blue;\n  width: 50%;\n  min-height: 400px;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  div {\n    height: 75px;\n    width: 100%;\n    border: 1px solid green;\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    align-items: center;\n  }\n"])));
 
 function CreateTask() {
+  var _useContext = (0, _react.useContext)(_context.default),
+      setInputField = _useContext.setInputField,
+      setNameTask = _useContext.setNameTask,
+      setTaskStatus = _useContext.setTaskStatus,
+      setHasStarted = _useContext.setHasStarted,
+      setIsOn = _useContext.setIsOn,
+      setHasFinished = _useContext.setHasFinished,
+      setTimeElapsed = _useContext.setTimeElapsed,
+      setTaskNumber = _useContext.setTaskNumber,
+      setStartTime = _useContext.setStartTime,
+      setStopTime = _useContext.setStopTime,
+      intervalRef = _useContext.intervalRef;
+
+  (0, _react.useEffect)(function () {
+    (0, _helpers.resetTask)("", [setTaskStatus, setNameTask, setInputField]);
+    (0, _helpers.resetTask)(false, [setHasStarted, setIsOn, setHasFinished]);
+    (0, _helpers.resetTask)(0, [setTimeElapsed, setTaskNumber, setStartTime, setStopTime]);
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  }, []);
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_InputField.default, null), /*#__PURE__*/_react.default.createElement(_ShowTimeSpent.default, null), /*#__PURE__*/_react.default.createElement(_TimerControls.default, null));
 }
-},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./createtask/InputField":"components/createtask/InputField.js","./createtask/ShowTimeSpent":"components/createtask/ShowTimeSpent.js","./createtask/TimerControls":"components/createtask/TimerControls.js"}],"components/history/BackHomeButton.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./createtask/InputField":"components/createtask/InputField.js","./createtask/ShowTimeSpent":"components/createtask/ShowTimeSpent.js","./createtask/TimerControls":"components/createtask/TimerControls.js","../context/context":"context/context.js","../helpers/helpers":"helpers/helpers.js"}],"components/history/BackHomeButton.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37721,7 +37756,7 @@ function TaskDetail(_ref) {
 
   var dateObject = new Date(lenghtInNumb);
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("section", null, /*#__PURE__*/_react.default.createElement("h1", null, "".concat(task.name ? task.name : "No name yet", " |  ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished")), !isFinished ? /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
-    to: "/"
+    to: "/".concat(task.jobId)
   }, /*#__PURE__*/_react.default.createElement("button", null, "Go to task")) : null));
 }
 },{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/history/AllTasks.js":[function(require,module,exports) {
@@ -37749,15 +37784,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function AllTasks() {
   var _useContext = (0, _react.useContext)(_context.default),
       allTasks = _useContext.allTasks,
-      filteredTasks = _useContext.filteredTasks; //   let tasks;
-  //   if (filteredTasks.length > 0) {
-  //     debugger;
-  //     tasks = filteredTasks;
-  //   } else {
-  //     debugger;
-  //     tasks = allTasks;
-  //   }
-
+      filteredTasks = _useContext.filteredTasks;
 
   if (allTasks.length === 0) {
     return /*#__PURE__*/_react.default.createElement("div", null, "No tasks yet");
@@ -37982,7 +38009,11 @@ var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObjec
 function TaskHistory() {
   var _useContext = (0, _react.useContext)(_context.default),
       setAllTasks = _useContext.setAllTasks,
-      setErrorMessage = _useContext.setErrorMessage;
+      setErrorMessage = _useContext.setErrorMessage,
+      hasStarted = _useContext.hasStarted,
+      isOn = _useContext.isOn,
+      startTime = _useContext.startTime,
+      hasFinished = _useContext.hasFinished;
 
   (0, _react.useEffect)(function () {
     _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
@@ -37991,6 +38022,10 @@ function TaskHistory() {
       var message = err.response.data.data.message;
       (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
     });
+  }, []);
+  (0, _react.useEffect)(function () {
+    if (hasStarted && startTime && isOn && !hasFinished) // call db to update latest know elapsed time
+      console.log("gota save!");
   }, []);
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_DatePicker.default, null), /*#__PURE__*/_react.default.createElement(_AllTasks.default, null), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
 }
@@ -38012,7 +38047,84 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function NotFound() {
   return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h1", null, "404 not found"), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
 }
-},{"react":"../node_modules/react/index.js","./history/BackHomeButton":"components/history/BackHomeButton.js"}],"routes/Routes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./history/BackHomeButton":"components/history/BackHomeButton.js"}],"components/EditTask.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = EditTask;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _InputField = _interopRequireDefault(require("./createtask/InputField"));
+
+var _ShowTimeSpent = _interopRequireDefault(require("./createtask/ShowTimeSpent"));
+
+var _TimerControls = _interopRequireDefault(require("./createtask/TimerControls"));
+
+var _context = _interopRequireDefault(require("../context/context"));
+
+var _env = require("../../config/env");
+
+var _helpers = require("../helpers/helpers");
+
+var _templateObject;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  border: 5px solid blue;\n  width: 50%;\n  min-height: 400px;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  div {\n    height: 75px;\n    width: 100%;\n    border: 1px solid green;\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    align-items: center;\n  }\n"])));
+
+function EditTask(_ref) {
+  var match = _ref.match;
+  var taskId = match.params.taskId;
+
+  var _useContext = (0, _react.useContext)(_context.default),
+      setTimeElapsed = _useContext.setTimeElapsed,
+      setHasStarted = _useContext.setHasStarted,
+      setTaskNumber = _useContext.setTaskNumber,
+      setNameTask = _useContext.setNameTask,
+      setInputField = _useContext.setInputField,
+      setErrorMessage = _useContext.setErrorMessage,
+      intervalRef = _useContext.intervalRef,
+      setStartTime = _useContext.setStartTime,
+      setStopTime = _useContext.setStopTime,
+      setTaskStatus = _useContext.setTaskStatus;
+
+  (0, _react.useEffect)(function () {
+    _axios.default.get("".concat(_env.envVariables.endpointBase, "task-").concat(taskId)).then(function (res) {
+      var _res$data$data = res.data.data,
+          length = _res$data$data.length,
+          jobId = _res$data$data.jobId,
+          name = _res$data$data.name;
+      setTimeElapsed(Math.floor(length / 1000));
+      setHasStarted(true);
+      setTaskNumber(jobId);
+      setNameTask(name);
+      setInputField(name);
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+      setStartTime(0);
+      setStopTime(0);
+      setTaskStatus("paused");
+    }).catch(function (err) {
+      var message = err.response.data.data.message;
+      (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
+    });
+  }, []);
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_InputField.default, null), /*#__PURE__*/_react.default.createElement(_ShowTimeSpent.default, null), /*#__PURE__*/_react.default.createElement(_TimerControls.default, null));
+}
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","axios":"../node_modules/axios/index.js","./createtask/InputField":"components/createtask/InputField.js","./createtask/ShowTimeSpent":"components/createtask/ShowTimeSpent.js","./createtask/TimerControls":"components/createtask/TimerControls.js","../context/context":"context/context.js","../../config/env":"../config/env.js","../helpers/helpers":"helpers/helpers.js"}],"routes/Routes.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38030,6 +38142,8 @@ var _TaskHistory = _interopRequireDefault(require("../components/TaskHistory"));
 
 var _NotFound = _interopRequireDefault(require("../components/NotFound"));
 
+var _EditTask = _interopRequireDefault(require("../components/EditTask"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // components
@@ -38042,10 +38156,13 @@ function Routes() {
     path: "/history",
     component: _TaskHistory.default
   }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+    path: "/:taskId",
+    component: _EditTask.default
+  }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
     component: _NotFound.default
   })));
 }
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../components/CreateTask":"components/CreateTask.js","../components/TaskHistory":"components/TaskHistory.js","../components/NotFound":"components/NotFound.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../components/CreateTask":"components/CreateTask.js","../components/TaskHistory":"components/TaskHistory.js","../components/NotFound":"components/NotFound.js","../components/EditTask":"components/EditTask.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireWildcard(require("react"));
@@ -38243,7 +38360,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59005" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54680" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

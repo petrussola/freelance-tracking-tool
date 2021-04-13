@@ -28,7 +28,7 @@ export default function TaskDetail({ task }) {
           isFinished ? "Completed 🎉" : "Not finished"
         }`}</h1>
         {!isFinished ? (
-          <Link to="/">
+          <Link to={`/${task.jobId}`}>
             <button>Go to task</button>
           </Link>
         ) : null}

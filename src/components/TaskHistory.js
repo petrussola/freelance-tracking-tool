@@ -24,7 +24,14 @@ const StyledDiv = styled.div`
 `;
 
 export default function TaskHistory() {
-  const { setAllTasks, setErrorMessage } = useContext(TimerContext);
+  const {
+    setAllTasks,
+    setErrorMessage,
+    hasStarted,
+    isOn,
+    startTime,
+    hasFinished,
+  } = useContext(TimerContext);
 
   useEffect(() => {
     axios
@@ -36,6 +43,12 @@ export default function TaskHistory() {
         const { message } = err.response.data.data;
         handleDisplayMessage(message, setErrorMessage);
       });
+  }, []);
+
+  useEffect(() => {
+    if (hasStarted && startTime && isOn && !hasFinished)
+      // call db to update latest know elapsed time
+      console.log("gota save!");
   }, []);
 
   return (

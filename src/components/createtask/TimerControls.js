@@ -23,7 +23,6 @@ export default function TimerControls() {
     taskNumber,
     setTaskNumber,
     setErrorMessage,
-    setToastMessage,
     startTime,
     setStartTime,
     stopTime,
@@ -85,9 +84,9 @@ export default function TimerControls() {
           let id;
           // get id back and set local state
           if (res.data.data.id.jobId) {
-            id = res.data.data.id.jobId;
+            id = res.data.data.id.jobId; // postgres
           } else {
-            id = res.data.data.id;
+            id = res.data.data.id; // sqlite
           }
           setTaskNumber(id);
           localStorage.setItem("task", JSON.stringify({ startTime, id }));

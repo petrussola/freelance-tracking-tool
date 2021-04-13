@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 
 // components
 import InputField from "./createtask/InputField";
 import ShowTimeSpent from "./createtask/ShowTimeSpent";
 import TimerControls from "./createtask/TimerControls";
+
+// context
+import TimerContext from "../context/context";
+
+// helpers
+import { resetTask } from "../helpers/helpers";
 
 const StyledDiv = styled.div`
   border: 5px solid blue;
@@ -26,6 +32,28 @@ const StyledDiv = styled.div`
 `;
 
 export default function CreateTask() {
+  const {
+    setInputField,
+    setNameTask,
+    setTaskStatus,
+    setHasStarted,
+    setIsOn,
+    setHasFinished,
+    setTimeElapsed,
+    setTaskNumber,
+    setStartTime,
+    setStopTime,
+    intervalRef,
+  } = useContext(TimerContext);
+
+  useEffect(() => {
+    resetTask("", [setTaskStatus, setNameTask, setInputField]);
+    resetTask(false, [setHasStarted, setIsOn, setHasFinished]);
+    resetTask(0, [setTimeElapsed, setTaskNumber, setStartTime, setStopTime]);
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  }, []);
+  
   return (
     <StyledDiv>
       <InputField />
