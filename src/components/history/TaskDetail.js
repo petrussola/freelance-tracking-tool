@@ -73,7 +73,7 @@ export default function TaskDetail({ task }) {
       }`}
       {!isFinished ? (
         <Link to={`/task/${jobId}`}>
-          <button>Continue Task</button>
+          <button>Continue</button>
         </Link>
       ) : null}
 

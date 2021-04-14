@@ -28,8 +28,7 @@ const StyledDiv = styled.div`
 const App = () => {
   const [hasStarted, setHasStarted] = useState(false);
   const [isOn, setIsOn] = useState(false);
-  const [autoPaused, setAutoPaused] = useState(false);
-  const [lengthTime, setLengthTime] = useState(0);
+  const [autoPaused, setAutoPaused] = useState(false); // when user goes to history without pausing, the task will autopause
   const [isLoading, setIsLoading] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -95,8 +94,6 @@ const App = () => {
     setInputField,
     autoPaused,
     setAutoPaused,
-    lengthTime,
-    setLengthTime,
     isFiltered,
     setIsFiltered,
     editedTask,

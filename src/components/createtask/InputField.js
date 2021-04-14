@@ -107,7 +107,7 @@ export default function InputField() {
         })
         .catch((err) => {
           handleDisplayMessage(err.response.data.data, setErrorMessage);
-        });
+        })
     }
   }, [nameTask]);
 

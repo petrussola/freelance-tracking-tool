@@ -17,7 +17,7 @@ const StyledDiv = styled.div`
   align-items: center;
   > select {
     padding: 0.5rem;
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
       margin: 0.5rem 0;
       width: 100%;
     }
@@ -106,7 +106,7 @@ export default function DatePicker() {
       {filteredTasks.length === 0 && !isFiltered ? (
         <button onClick={handleFilter}>Filter</button>
       ) : (
-        <button onClick={clearFilter}>Clear filter</button>
+        <button onClick={clearFilter}>Clear</button>
       )}
     </StyledDiv>
   );

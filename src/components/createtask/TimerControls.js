@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
@@ -59,7 +60,6 @@ export default function TimerControls() {
     nameTask,
     setNameTask,
     setInputField,
-    lengthTime,
     editedTask,
     timeElapsed,
   } = useContext(TimerContext);
@@ -167,6 +167,7 @@ export default function TimerControls() {
   useEffect(() => {
     if (isOn && stopTime > 0 && startTime > 0 && !hasFinished) {
       setIsOn(false); // set task as not running
+      setIsLoading(true);
       let diffTime;
       if (Object.keys(editedTask).length > 0) {
         diffTime = timeElapsed * 1000 - editedTask.length;
@@ -187,6 +188,9 @@ export default function TimerControls() {
         })
         .catch((err) => {
           handleDisplayMessage(err.response.data.data, setErrorMessage);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
       // }
     }
@@ -196,6 +200,7 @@ export default function TimerControls() {
     if (hasFinished && isOn) {
       // when task is stopped while running
       // update server with needed info: additional length of the session + end time
+      setIsLoading(true);
       let diffTime;
       if (Object.keys(editedTask).length > 0) {
         diffTime = timeElapsed * 1000 - editedTask.length;
@@ -213,6 +218,9 @@ export default function TimerControls() {
         })
         .catch((err) => {
           handleDisplayMessage(err.response.data.data, setErrorMessage);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
       setIsOn(false);
       if (intervalRef.current === null) return;
@@ -221,6 +229,7 @@ export default function TimerControls() {
     } else if (hasFinished && !isOn) {
       // if task is stopped while paused
       const diffTime = 0; // the new length to add is 0 since we don't want to increment the length in the server
+      setIsLoading(true);
       axios
         .put(`${envVariables.endpointBase}finish-task`, {
           id: taskNumber,
@@ -232,6 +241,9 @@ export default function TimerControls() {
         })
         .catch((err) => {
           handleDisplayMessage(err.response.data.data, setErrorMessage);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   }, [hasFinished]);

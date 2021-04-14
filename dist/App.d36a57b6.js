@@ -37566,7 +37566,6 @@ function TimerControls() {
       nameTask = _useContext.nameTask,
       setNameTask = _useContext.setNameTask,
       setInputField = _useContext.setInputField,
-      lengthTime = _useContext.lengthTime,
       editedTask = _useContext.editedTask,
       timeElapsed = _useContext.timeElapsed;
 
@@ -37673,6 +37672,7 @@ function TimerControls() {
     if (isOn && stopTime > 0 && startTime > 0 && !hasFinished) {
       setIsOn(false); // set task as not running
 
+      setIsLoading(true);
       var diffTime;
 
       if (Object.keys(editedTask).length > 0) {
@@ -37694,6 +37694,8 @@ function TimerControls() {
         intervalRef.current = null;
       }).catch(function (err) {
         (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+      }).finally(function () {
+        setIsLoading(false);
       }); // }
 
     }
@@ -37702,6 +37704,7 @@ function TimerControls() {
     if (hasFinished && isOn) {
       // when task is stopped while running
       // update server with needed info: additional length of the session + end time
+      setIsLoading(true);
       var diffTime;
 
       if (Object.keys(editedTask).length > 0) {
@@ -37718,6 +37721,8 @@ function TimerControls() {
         setTaskStatus("Completed"); // set status as completed
       }).catch(function (err) {
         (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+      }).finally(function () {
+        setIsLoading(false);
       });
 
       setIsOn(false);
@@ -37728,6 +37733,8 @@ function TimerControls() {
       // if task is stopped while paused
       var _diffTime = 0; // the new length to add is 0 since we don't want to increment the length in the server
 
+      setIsLoading(true);
+
       _axios.default.put("".concat(_env.envVariables.endpointBase, "finish-task"), {
         id: taskNumber,
         diffTime: _diffTime,
@@ -37736,6 +37743,8 @@ function TimerControls() {
         setTaskStatus("Completed");
       }).catch(function (err) {
         (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+      }).finally(function () {
+        setIsLoading(false);
       });
     }
   }, [hasFinished]);
@@ -37924,7 +37933,7 @@ function TaskDetail(_ref) {
 
   return /*#__PURE__*/_react.default.createElement(StyledSection, null, "".concat(task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️", " |  Started on: ").concat(definedStartDate, " at ").concat(definedStartTime, " | ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished"), !isFinished ? /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
     to: "/task/".concat(jobId)
-  }, /*#__PURE__*/_react.default.createElement("button", null, "Continue Task")) : null, /*#__PURE__*/_react.default.createElement("button", {
+  }, /*#__PURE__*/_react.default.createElement("button", null, "Continue")) : null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleDelete,
     value: "delete"
   }, "Delete"));
@@ -37955,13 +37964,18 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  padding: 3rem;\n  @media(max-width: 600px) {\n    width: 100%;\n    padding: 0;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  padding: 3rem;\n  @media (max-width: 600px) {\n    width: 100%;\n    padding: 0;\n  }\n"])));
 
 function AllTasks() {
   var _useContext = (0, _react.useContext)(_context.default),
       allTasks = _useContext.allTasks,
       filteredTasks = _useContext.filteredTasks,
-      isFiltered = _useContext.isFiltered;
+      isFiltered = _useContext.isFiltered,
+      isLoading = _useContext.isLoading;
+
+  if (isLoading) {
+    return /*#__PURE__*/_react.default.createElement("div", null, "Loading...");
+  }
 
   if (allTasks.length === 0) {
     return /*#__PURE__*/_react.default.createElement("div", null, "No tasks yet");
@@ -38070,7 +38084,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  > select {\n    padding: 0.5rem;\n    @media(max-width: 600px) {\n      margin: 0.5rem 0;\n      width: 100%;\n    }\n  }\n  @media (max-width: 600px) {\n    flex-direction: column;\n    width: 100%;\n    button {\n      width: 100%;\n    }\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  > select {\n    padding: 0.5rem;\n    @media (max-width: 600px) {\n      margin: 0.5rem 0;\n      width: 100%;\n    }\n  }\n  @media (max-width: 600px) {\n    flex-direction: column;\n    width: 100%;\n    button {\n      width: 100%;\n    }\n  }\n"])));
 
 function DatePicker() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -38160,7 +38174,7 @@ function DatePicker() {
     onClick: handleFilter
   }, "Filter") : /*#__PURE__*/_react.default.createElement("button", {
     onClick: clearFilter
-  }, "Clear filter"));
+  }, "Clear"));
 }
 },{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./DateSelector":"components/history/DateSelector.js","../../context/context":"context/context.js","../../helpers/helpers":"helpers/helpers.js"}],"components/TaskHistory.js":[function(require,module,exports) {
 "use strict";
@@ -38218,7 +38232,8 @@ function TaskHistory() {
       setAutoPaused = _useContext.setAutoPaused,
       editedTask = _useContext.editedTask,
       timeElapsed = _useContext.timeElapsed,
-      setEditedTask = _useContext.setEditedTask;
+      setEditedTask = _useContext.setEditedTask,
+      setIsLoading = _useContext.setIsLoading;
 
   (0, _react.useEffect)(function () {
     if (hasStarted && startTime && isOn && Object.keys(editedTask).length === 0) {
@@ -38236,6 +38251,7 @@ function TaskHistory() {
   }, []);
   (0, _react.useEffect)(function () {
     setEditedTask({});
+    setIsLoading(true);
 
     if (hasStarted && startTime && autoPaused && !hasFinished) {
       var diffTime = stopTime - startTime;
@@ -38243,7 +38259,7 @@ function TaskHistory() {
       _axios.default.put("".concat(_env.envVariables.endpointBase, "pause-task"), {
         id: taskNumber,
         diffTime: diffTime
-      }).then(function (res) {
+      }).then(function () {
         setTaskStatus("Paused"); // once server confirms pausing has been saved, we sync frontend
 
         if (intervalRef.current === null) return;
@@ -38254,12 +38270,14 @@ function TaskHistory() {
         getTasks();
       }).catch(function (err) {
         (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+      }).finally(function () {
+        setIsLoading(false);
       });
     }
   }, [stopTime]);
 
   function getTasks() {
-    _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
+    return _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
       setAllTasks(res.data.data);
     }).catch(function (err) {
       (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
@@ -38267,10 +38285,14 @@ function TaskHistory() {
   }
 
   (0, _react.useEffect)(function () {
+    setIsLoading(true);
+
     _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
       setAllTasks(res.data.data);
     }).catch(function (err) {
       (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+    }).finally(function () {
+      setIsLoading(false);
     });
   }, []);
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_DatePicker.default, null), /*#__PURE__*/_react.default.createElement(_AllTasks.default, null), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
@@ -38386,89 +38408,85 @@ var App = function App() {
   var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
       autoPaused = _useState6[0],
-      setAutoPaused = _useState6[1];
+      setAutoPaused = _useState6[1]; // when user goes to history without pausing, the task will autopause
 
-  var _useState7 = (0, _react.useState)(0),
+
+  var _useState7 = (0, _react.useState)(false),
       _useState8 = _slicedToArray(_useState7, 2),
-      lengthTime = _useState8[0],
-      setLengthTime = _useState8[1];
+      isLoading = _useState8[0],
+      setIsLoading = _useState8[1];
 
   var _useState9 = (0, _react.useState)(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      isLoading = _useState10[0],
-      setIsLoading = _useState10[1];
+      hasFinished = _useState10[0],
+      setHasFinished = _useState10[1];
 
-  var _useState11 = (0, _react.useState)(false),
+  var _useState11 = (0, _react.useState)(0),
       _useState12 = _slicedToArray(_useState11, 2),
-      hasFinished = _useState12[0],
-      setHasFinished = _useState12[1];
+      timeElapsed = _useState12[0],
+      setTimeElapsed = _useState12[1];
 
   var _useState13 = (0, _react.useState)(0),
       _useState14 = _slicedToArray(_useState13, 2),
-      timeElapsed = _useState14[0],
-      setTimeElapsed = _useState14[1];
+      taskNumber = _useState14[0],
+      setTaskNumber = _useState14[1];
 
-  var _useState15 = (0, _react.useState)(0),
+  var _useState15 = (0, _react.useState)(""),
       _useState16 = _slicedToArray(_useState15, 2),
-      taskNumber = _useState16[0],
-      setTaskNumber = _useState16[1];
+      inputField = _useState16[0],
+      setInputField = _useState16[1];
 
   var _useState17 = (0, _react.useState)(""),
       _useState18 = _slicedToArray(_useState17, 2),
-      inputField = _useState18[0],
-      setInputField = _useState18[1];
+      nameTask = _useState18[0],
+      setNameTask = _useState18[1];
 
   var _useState19 = (0, _react.useState)(""),
       _useState20 = _slicedToArray(_useState19, 2),
-      nameTask = _useState20[0],
-      setNameTask = _useState20[1];
+      errorMessage = _useState20[0],
+      setErrorMessage = _useState20[1];
 
   var _useState21 = (0, _react.useState)(""),
       _useState22 = _slicedToArray(_useState21, 2),
-      errorMessage = _useState22[0],
-      setErrorMessage = _useState22[1];
+      toastMessage = _useState22[0],
+      setToastMessage = _useState22[1];
 
-  var _useState23 = (0, _react.useState)(""),
+  var _useState23 = (0, _react.useState)(0),
       _useState24 = _slicedToArray(_useState23, 2),
-      toastMessage = _useState24[0],
-      setToastMessage = _useState24[1];
+      startTime = _useState24[0],
+      setStartTime = _useState24[1];
 
   var _useState25 = (0, _react.useState)(0),
       _useState26 = _slicedToArray(_useState25, 2),
-      startTime = _useState26[0],
-      setStartTime = _useState26[1];
+      stopTime = _useState26[0],
+      setStopTime = _useState26[1];
 
-  var _useState27 = (0, _react.useState)(0),
+  var _useState27 = (0, _react.useState)(""),
       _useState28 = _slicedToArray(_useState27, 2),
-      stopTime = _useState28[0],
-      setStopTime = _useState28[1];
+      taskStatus = _useState28[0],
+      setTaskStatus = _useState28[1];
 
-  var _useState29 = (0, _react.useState)(""),
+  var _useState29 = (0, _react.useState)([]),
       _useState30 = _slicedToArray(_useState29, 2),
-      taskStatus = _useState30[0],
-      setTaskStatus = _useState30[1];
+      allTasks = _useState30[0],
+      setAllTasks = _useState30[1];
 
-  var _useState31 = (0, _react.useState)([]),
+  var _useState31 = (0, _react.useState)(false),
       _useState32 = _slicedToArray(_useState31, 2),
-      allTasks = _useState32[0],
-      setAllTasks = _useState32[1];
+      isFiltered = _useState32[0],
+      setIsFiltered = _useState32[1];
 
-  var _useState33 = (0, _react.useState)(false),
+  var _useState33 = (0, _react.useState)([]),
       _useState34 = _slicedToArray(_useState33, 2),
-      isFiltered = _useState34[0],
-      setIsFiltered = _useState34[1];
+      filteredTasks = _useState34[0],
+      setFilteredTasks = _useState34[1];
 
-  var _useState35 = (0, _react.useState)([]),
+  var _useState35 = (0, _react.useState)({}),
       _useState36 = _slicedToArray(_useState35, 2),
-      filteredTasks = _useState36[0],
-      setFilteredTasks = _useState36[1];
+      editedTask = _useState36[0],
+      setEditedTask = _useState36[1];
 
-  var _useState37 = (0, _react.useState)({}),
-      _useState38 = _slicedToArray(_useState37, 2),
-      editedTask = _useState38[0],
-      setEditedTask = _useState38[1];
-
-  var _useState39 = (0, _react.useState)({
+  var _useState37 = (0, _react.useState)({
     from: {
       day: undefined,
       month: undefined,
@@ -38480,9 +38498,9 @@ var App = function App() {
       year: undefined
     }
   }),
-      _useState40 = _slicedToArray(_useState39, 2),
-      datePick = _useState40[0],
-      setDatePick = _useState40[1];
+      _useState38 = _slicedToArray(_useState37, 2),
+      datePick = _useState38[0],
+      setDatePick = _useState38[1];
 
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
@@ -38521,8 +38539,6 @@ var App = function App() {
     setInputField: setInputField,
     autoPaused: autoPaused,
     setAutoPaused: setAutoPaused,
-    lengthTime: lengthTime,
-    setLengthTime: setLengthTime,
     isFiltered: isFiltered,
     setIsFiltered: setIsFiltered,
     editedTask: editedTask,

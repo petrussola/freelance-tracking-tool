@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -50,6 +51,7 @@ export default function TaskHistory() {
     editedTask,
     timeElapsed,
     setEditedTask,
+    setIsLoading,
   } = useContext(TimerContext);
 
   useEffect(() => {
@@ -77,6 +79,7 @@ export default function TaskHistory() {
 
   useEffect(() => {
     setEditedTask({});
+    setIsLoading(true);
     if (hasStarted && startTime && autoPaused && !hasFinished) {
       const diffTime = stopTime - startTime;
       axios
@@ -84,7 +87,7 @@ export default function TaskHistory() {
           id: taskNumber,
           diffTime,
         })
-        .then((res) => {
+        .then(() => {
           setTaskStatus("Paused"); // once server confirms pausing has been saved, we sync frontend
           if (intervalRef.current === null) return;
           clearInterval(intervalRef.current); // we clear the interval to stop it
@@ -94,12 +97,15 @@ export default function TaskHistory() {
         })
         .catch((err) => {
           handleDisplayMessage(err.response.data.data, setErrorMessage);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   }, [stopTime]);
 
   function getTasks() {
-    axios
+    return axios
       .get(`${envVariables.endpointBase}tasks`)
       .then((res) => {
         setAllTasks(res.data.data);
@@ -110,6 +116,7 @@ export default function TaskHistory() {
   }
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get(`${envVariables.endpointBase}tasks`)
       .then((res) => {
@@ -117,6 +124,9 @@ export default function TaskHistory() {
       })
       .catch((err) => {
         handleDisplayMessage(err.response.data.data, setErrorMessage);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 

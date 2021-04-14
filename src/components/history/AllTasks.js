@@ -9,14 +9,20 @@ import TimerContext from "../../context/context";
 
 const StyledDiv = styled.div`
   padding: 3rem;
-  @media(max-width: 600px) {
+  @media (max-width: 600px) {
     width: 100%;
     padding: 0;
   }
 `;
 
 export default function AllTasks() {
-  const { allTasks, filteredTasks, isFiltered } = useContext(TimerContext);
+  const { allTasks, filteredTasks, isFiltered, isLoading } = useContext(
+    TimerContext
+  );
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (allTasks.length === 0) {
     return <div>No tasks yet</div>;
