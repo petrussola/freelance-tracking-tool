@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import axios from "axios";
+import styled from "styled-components";
 
 // context
 import TimerContext from "../../context/context";
@@ -10,12 +11,26 @@ import { envVariables } from "../../../config/env";
 // helpers
 import { handleDisplayMessage } from "../../helpers/helpers";
 
+const StyledDiv = styled.div`
+  margin-top: 3rem;
+  button {
+    border: 1px solid green;
+    color: white;
+    background-color: green;
+    :disabled {
+      background-color: grey;
+      border: 1px solid grey;
+    }
+  }
+`;
+
 export default function TimerControls() {
   const {
     hasStarted,
     setHasStarted,
     isOn,
     setIsOn,
+    setIsLoading,
     hasFinished,
     setHasFinished,
     setTimeElapsed,
@@ -31,37 +46,39 @@ export default function TimerControls() {
     nameTask,
     setNameTask,
     setInputField,
+    lengthTime,
   } = useContext(TimerContext);
 
   const handleStartPause = () => {
     if (!hasStarted && !isOn) {
-      // start task and set as on
-      setTaskStatus("recording time");
+      // if task is not started - will trigger 1st useEffect
+      setTaskStatus("Recording");
       const tempStartTime = Date.now();
       setStartTime(tempStartTime);
     } else if (hasStarted && isOn) {
-      // pause task / set !isOn
+      // if task is started and is running, pause task - will trigger 2nd useEffect
       const tempPauseTime = Date.now();
       setStopTime(tempPauseTime);
     } else if (hasStarted && !isOn) {
-      // restart task and set isOn
+      // if task is started but it is paused, restart task and set isOn - will trigger 1st useEffect
       const tempStartTime = Date.now();
       setStartTime(tempStartTime);
     }
   };
 
   const handleStop = () => {
-    const tempPauseTime = Date.now();
-    setHasFinished(true);
-    setStopTime(tempPauseTime);
+    const tempStopTime = Date.now();
+    setStopTime(tempStopTime); // setting stop time - will trigger 2nd useEffect
+    setHasFinished(true); // set task as complet - trigger 3rd useEffect
   };
 
+  // when reset button is clicked
   const resetTask = () => {
     setHasStarted(false);
     setIsOn(false);
     setHasFinished(false);
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
+    // clearInterval(intervalRef.current);
+    // intervalRef.current = null;
     setTimeElapsed(0);
     setTaskNumber(0);
     setStartTime(0);
@@ -73,8 +90,10 @@ export default function TimerControls() {
 
   useEffect(() => {
     if (!hasStarted && !isOn && startTime > 0) {
-      setHasStarted(true);
-      setIsOn(true);
+      // first time task is started (start time is set in previous step)
+      setHasStarted(true); // set as task started
+      setIsOn(true); // set as task running
+      setIsLoading(true); // set as loading while we wait for confirmation from server that task has been created. timer will only start when server response is ok
       axios
         .post(`${envVariables.endpointBase}create-task`, {
           name: nameTask,
@@ -82,31 +101,40 @@ export default function TimerControls() {
         })
         .then((res) => {
           let id;
-          // get id back and set local state
+          // get task id back from server and set local state for future use
           if (res.data.data.id.jobId) {
-            id = res.data.data.id.jobId; // postgres
+            id = res.data.data.id.jobId; // postgres returns the id column name
           } else {
-            id = res.data.data.id; // sqlite
+            id = res.data.data.id; // sqlite return the id, less nested than postgress
           }
-          setTaskNumber(id);
-          localStorage.setItem("task", JSON.stringify({ startTime, id }));
+          setTaskNumber(id); // set task id as local state
+          // start counter
           intervalRef.current = setInterval(() => {
+            // starts at 0 (time elapsed, and adds 1 every 1000 miliseconds)
             setTimeElapsed((timeElapsed) => {
               return timeElapsed + 1;
             });
           }, 1000);
         })
         .catch((err) => {
-          const { message } = err.response.data.data;
-          if (message) {
-            setErrorMessage(message);
-          } else {
-            setErrorMessage("There was an error. Pleas try again later.");
+          // if server gives no response, it is likely to be down
+          if (!err.response) {
+            handleDisplayMessage(
+              "The server seems to be offline. Please check with the owner of the app :)",
+              setErrorMessage
+            );
           }
+          // display error messages
+          handleDisplayMessage(err.response.data.data, setErrorMessage);
+        })
+        .finally(() => {
+          // clear loading state
+          setIsLoading(false);
         });
     } else if (hasStarted && !isOn) {
-      // restart timer path
-      setIsOn(true);
+      // if task is paused when start/pause button is clicked
+      setIsOn(true); // set as running, again
+      // restart the counter
       intervalRef.current = setInterval(() => {
         setTimeElapsed((timeElapsed) => {
           return timeElapsed + 1;
@@ -116,32 +144,32 @@ export default function TimerControls() {
   }, [startTime]);
 
   useEffect(() => {
-    setIsOn(false);
-    const diffTime = stopTime - startTime;
-    if (stopTime > 0 && startTime > 0 && !hasFinished) {
-      // const { id } = JSON.parse(localStorage.getItem("task"));
-      // call db and set length of task
+    if (isOn && stopTime > 0 && startTime > 0 && !hasFinished) {
+      setIsOn(false); // set task as not running
+      const diffTime = stopTime - startTime;
+      // if active task has been paused, we need to save interval of time in the server
       axios
         .put(`${envVariables.endpointBase}pause-task`, {
           id: taskNumber,
           diffTime,
         })
-        .then(() => {})
-        .catch((err) => {
-          const { message } = err.response.data.data;
-          handleDisplayMessage(message, setErrorMessage);
-        })
-        .finally(() => {
-          setTaskStatus("paused");
+        .then(() => {
+          setTaskStatus("Paused"); // once server confirms pausing has been saved, we sync frontend
           if (intervalRef.current === null) return;
-          clearInterval(intervalRef.current);
+          clearInterval(intervalRef.current); // we clear the interval to stop it
           intervalRef.current = null;
+        })
+        .catch((err) => {
+          handleDisplayMessage(err.response.data.data, setErrorMessage);
         });
+      // }
     }
   }, [stopTime]);
 
   useEffect(() => {
     if (hasFinished && isOn) {
+      // when task is stopped while running
+      // update server with needed info: additional length of the session + end time
       const diffTime = stopTime - startTime;
       axios
         .put(`${envVariables.endpointBase}finish-task`, {
@@ -150,18 +178,18 @@ export default function TimerControls() {
           stopTime,
         })
         .then(() => {
-          setTaskStatus("completed");
+          setTaskStatus("Completed"); // set status as completed
         })
         .catch((err) => {
-          const { message } = err.response.data.data;
-          handleDisplayMessage(message, setErrorMessage);
+          handleDisplayMessage(err.response.data.data, setErrorMessage);
         });
       setIsOn(false);
       if (intervalRef.current === null) return;
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     } else if (hasFinished && !isOn) {
-      const diffTime = 0;
+      // if task is stopped while paused
+      const diffTime = 0; // the new length to add is 0 since we don't want to increment the length in the server
       axios
         .put(`${envVariables.endpointBase}finish-task`, {
           id: taskNumber,
@@ -169,17 +197,16 @@ export default function TimerControls() {
           stopTime,
         })
         .then(() => {
-          setTaskStatus("completed");
+          setTaskStatus("Completed");
         })
         .catch((err) => {
-          const { message } = err.response.data.data;
-          handleDisplayMessage(message, setErrorMessage);
+          handleDisplayMessage(err.response.data.data, setErrorMessage);
         });
     }
   }, [hasFinished]);
 
   return (
-    <div>
+    <StyledDiv>
       <button onClick={handleStartPause} disabled={hasFinished ? true : false}>
         {isOn ? "Pause" : hasStarted ? "Restart" : "Start"}
       </button>
@@ -189,6 +216,6 @@ export default function TimerControls() {
         </button>
       ) : null}
       {hasFinished ? <button onClick={resetTask}>Start New Task</button> : null}
-    </div>
+    </StyledDiv>
   );
 }

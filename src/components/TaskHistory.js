@@ -21,6 +21,11 @@ const StyledDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border: 0.5px solid #737373;
+  box-shadow: 10px 5px 15px #737373;
+  border-radius: 5px;
+  width: 85%;
+  padding: 2rem;
 `;
 
 export default function TaskHistory() {
@@ -31,7 +36,57 @@ export default function TaskHistory() {
     isOn,
     startTime,
     hasFinished,
+    taskNumber,
+    stopTime,
+    setStopTime,
+    setIsOn,
+    setTaskStatus,
+    intervalRef,
+    autoPaused,
+    setAutoPaused,
   } = useContext(TimerContext);
+
+  useEffect(() => {
+    if (hasStarted && startTime && isOn) {
+      const tempPauseTime = Date.now();
+      setIsOn(false); // set task as not running
+      setAutoPaused(true);
+      setStopTime(tempPauseTime);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (hasStarted && startTime && autoPaused && !hasFinished) {
+      const diffTime = stopTime - startTime;
+      axios
+        .put(`${envVariables.endpointBase}pause-task`, {
+          id: taskNumber,
+          diffTime,
+        })
+        .then((res) => {
+          setTaskStatus("Paused"); // once server confirms pausing has been saved, we sync frontend
+          if (intervalRef.current === null) return;
+          clearInterval(intervalRef.current); // we clear the interval to stop it
+          intervalRef.current = null;
+          setAutoPaused(false);
+          getTasks();
+        })
+        .catch((err) => {
+          handleDisplayMessage(err.response.data.data, setErrorMessage);
+        });
+    }
+  }, [stopTime]);
+
+  function getTasks() {
+    axios
+      .get(`${envVariables.endpointBase}tasks`)
+      .then((res) => {
+        setAllTasks(res.data.data);
+      })
+      .catch((err) => {
+        handleDisplayMessage(err.response.data.data, setErrorMessage);
+      });
+  }
 
   useEffect(() => {
     axios
@@ -40,15 +95,8 @@ export default function TaskHistory() {
         setAllTasks(res.data.data);
       })
       .catch((err) => {
-        const { message } = err.response.data.data;
-        handleDisplayMessage(message, setErrorMessage);
+        handleDisplayMessage(err.response.data.data, setErrorMessage);
       });
-  }, []);
-
-  useEffect(() => {
-    if (hasStarted && startTime && isOn && !hasFinished)
-      // call db to update latest know elapsed time
-      console.log("gota save!");
   }, []);
 
   return (

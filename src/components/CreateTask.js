@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 // components
 import InputField from "./createtask/InputField";
+import Status from "./createtask/Status";
 import ShowTimeSpent from "./createtask/ShowTimeSpent";
 import TimerControls from "./createtask/TimerControls";
 
@@ -13,7 +14,9 @@ import TimerContext from "../context/context";
 import { resetTask } from "../helpers/helpers";
 
 const StyledDiv = styled.div`
-  border: 5px solid blue;
+  border: 0.5px solid #737373;
+  box-shadow: 10px 5px 15px #737373;
+  border-radius: 5px;
   width: 50%;
   min-height: 400px;
   display: flex;
@@ -23,7 +26,6 @@ const StyledDiv = styled.div`
   div {
     height: 75px;
     width: 100%;
-    border: 1px solid green;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -53,10 +55,11 @@ export default function CreateTask() {
     clearInterval(intervalRef.current);
     intervalRef.current = null;
   }, []);
-  
+
   return (
     <StyledDiv>
       <InputField />
+      <Status />
       <ShowTimeSpent />
       <TimerControls />
     </StyledDiv>

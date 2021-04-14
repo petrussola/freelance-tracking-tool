@@ -24,7 +24,7 @@ export default function DateSelector({ from, to, name, type }) {
     <select onChange={(e) => handleChange(e, name, type)}>
       <option
         value=""
-        selected={!datePick[type][name] ? true : false}
+        defaultValue={!datePick[type][name] ? true : false}
       >{`--Choose a ${name}--`}</option>
       {dates.map((date) => (
         <option value={date} key={date}>

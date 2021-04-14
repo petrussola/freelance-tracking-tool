@@ -1,5 +1,9 @@
 export const handleDisplayMessage = (message, cb) => {
-  cb(message);
+  if (!message) {
+    cb("Server is not responding. Contact administrator.");
+  } else {
+    cb(message);
+  }
   return setTimeout(() => {
     cb("");
   }, 3000);

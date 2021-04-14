@@ -35658,7 +35658,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-flow: row wrap;\n  justify-content: center;\n  align-items: center;\n  border-bottom: 2px solid red;\n  width: 100%;\n  h1 {\n    font-size: 2rem;\n    padding: 1rem;\n    min-width: 200px;\n    text-align: center;\n    :hover {\n      background-color: red;\n      color: white;\n    }\n  }\n  a {\n    text-decoration: none;\n    color: red;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-flow: row wrap;\n  justify-content: center;\n  align-items: center;\n  border-bottom: 2px solid #737373;\n  width: 100%;\n  color: #737373;\n  h1 {\n    font-size: 2rem;\n    padding: 1rem;\n    min-width: 200px;\n    text-align: center;\n    :hover {\n      background-color: #737373;\n      color: white;\n    }\n  }\n  a {\n    text-decoration: none;\n    color: #737373;\n  }\n"])));
 
 function NavBar() {
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
@@ -37330,7 +37330,12 @@ Object.defineProperty(exports, "__esModule", {
 exports.resetTask = exports.handleDisplayMessage = void 0;
 
 var handleDisplayMessage = function handleDisplayMessage(message, cb) {
-  cb(message);
+  if (!message) {
+    cb("Server is not responding. Contact administrator.");
+  } else {
+    cb(message);
+  }
+
   return setTimeout(function () {
     cb("");
   }, 3000);
@@ -37357,11 +37362,15 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
 var _context = _interopRequireDefault(require("../../context/context"));
 
 var _env = require("../../../config/env");
 
 var _helpers = require("../../helpers/helpers");
+
+var _templateObject;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37369,13 +37378,13 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-// context
-// env variables
-// helpers
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  font-size: 1.5rem;\n  input {\n    height: 3rem;\n    padding: 0 3rem;\n    margin-left: 15%;\n    border: 0.2px solid #737373;\n    border-radius: 5px;\n    font-size: 1.5rem;\n    width: 50%;\n  }\n  button {\n    border: 1px solid green;\n    color: white;\n    background-color: green;\n  }\n  form {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    justify-content: flex-start;\n    width: 100%;\n  }\n  h1 {\n    width: 50%;\n    margin-left: 15%;\n    padding-left: 3rem;\n  }\n"])));
+
 function InputField() {
   var _useContext = (0, _react.useContext)(_context.default),
       taskNumber = _useContext.taskNumber,
-      taskStatus = _useContext.taskStatus,
       nameTask = _useContext.nameTask,
       setNameTask = _useContext.setNameTask,
       hasStarted = _useContext.hasStarted,
@@ -37385,6 +37394,11 @@ function InputField() {
       setInputField = _useContext.setInputField;
 
   var handleName = function handleName(e) {
+    if (e.target.localName === "button") {
+      e.preventDefault();
+      setNameTask(inputField);
+    }
+
     if (e.code === "Enter") {
       setNameTask(inputField);
     }
@@ -37402,12 +37416,13 @@ function InputField() {
       }).then(function () {
         (0, _helpers.handleDisplayMessage)("Name of the task has been changed", setToastMessage);
       }).catch(function (err) {
-        var message = err.response.data.data.message;
-        (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
+        (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
       });
     }
   }, [nameTask]);
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("form", null, nameTask.length > 0 ? nameTask : /*#__PURE__*/_react.default.createElement("input", {
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("form", {
+    onSubmit: handleName
+  }, nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("h1", null, nameTask) : /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("input", {
     name: "nameTask",
     placeholder: "Name your task",
     value: inputField,
@@ -37415,17 +37430,19 @@ function InputField() {
       return setInputField(e.target.value);
     },
     onKeyDown: handleName
-  }), nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("button", {
+  }), /*#__PURE__*/_react.default.createElement("button", {
+    onClick: handleName
+  }, "Save Name")), nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("button", {
     onClick: editName
-  }, "Edit") : null, taskNumber > 0 ? "Task number ".concat(taskNumber) : null, taskStatus.length > 0 ? "Status: ".concat(taskStatus) : null));
+  }, "Edit Name") : null));
 }
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../context/context":"context/context.js","../../../config/env":"../config/env.js","../../helpers/helpers":"helpers/helpers.js"}],"components/createtask/ShowTimeSpent.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","../../context/context":"context/context.js","../../../config/env":"../config/env.js","../../helpers/helpers":"helpers/helpers.js"}],"components/createtask/Status.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = ShowTimeSpent;
+exports.default = Status;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -37438,6 +37455,43 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 // context
+function Status() {
+  var _useContext = (0, _react.useContext)(_context.default),
+      isLoading = _useContext.isLoading,
+      taskStatus = _useContext.taskStatus;
+
+  if (isLoading) {
+    return /*#__PURE__*/_react.default.createElement("div", null, "Loading...");
+  }
+
+  return /*#__PURE__*/_react.default.createElement("div", null, taskStatus.length > 0 ? "Status: ".concat(taskStatus) : null);
+}
+},{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/createtask/ShowTimeSpent.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = ShowTimeSpent;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+var _context = _interopRequireDefault(require("../../context/context"));
+
+var _templateObject;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  div {\n    font-size: 3rem;\n  }\n"])));
+
 function ShowTimeSpent() {
   var _useContext = (0, _react.useContext)(_context.default),
       timeElapsed = _useContext.timeElapsed;
@@ -37449,9 +37503,9 @@ function ShowTimeSpent() {
   var hours = padTime(Math.floor(timeElapsed / 60 / 60));
   var minutes = Math.floor(timeElapsed / 60);
   var seconds = padTime(timeElapsed - minutes * 60);
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", null, hours), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, padTime(minutes % 60)), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, seconds));
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("div", null, hours), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, padTime(minutes % 60)), /*#__PURE__*/_react.default.createElement("div", null, ":"), /*#__PURE__*/_react.default.createElement("div", null, seconds));
 }
-},{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/createtask/TimerControls.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","../../context/context":"context/context.js"}],"components/createtask/TimerControls.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37463,11 +37517,15 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
 var _context = _interopRequireDefault(require("../../context/context"));
 
 var _env = require("../../../config/env");
 
 var _helpers = require("../../helpers/helpers");
+
+var _templateObject;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37475,15 +37533,17 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-// context
-// env variables
-// helpers
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  margin-top: 3rem;\n  button {\n    border: 1px solid green;\n    color: white;\n    background-color: green;\n    :disabled {\n      background-color: grey;\n      border: 1px solid grey;\n    }\n  }\n"])));
+
 function TimerControls() {
   var _useContext = (0, _react.useContext)(_context.default),
       hasStarted = _useContext.hasStarted,
       setHasStarted = _useContext.setHasStarted,
       isOn = _useContext.isOn,
       setIsOn = _useContext.setIsOn,
+      setIsLoading = _useContext.setIsLoading,
       hasFinished = _useContext.hasFinished,
       setHasFinished = _useContext.setHasFinished,
       setTimeElapsed = _useContext.setTimeElapsed,
@@ -37498,20 +37558,21 @@ function TimerControls() {
       setTaskStatus = _useContext.setTaskStatus,
       nameTask = _useContext.nameTask,
       setNameTask = _useContext.setNameTask,
-      setInputField = _useContext.setInputField;
+      setInputField = _useContext.setInputField,
+      lengthTime = _useContext.lengthTime;
 
   var handleStartPause = function handleStartPause() {
     if (!hasStarted && !isOn) {
-      // start task and set as on
-      setTaskStatus("recording time");
+      // if task is not started - will trigger 1st useEffect
+      setTaskStatus("Recording");
       var tempStartTime = Date.now();
       setStartTime(tempStartTime);
     } else if (hasStarted && isOn) {
-      // pause task / set !isOn
+      // if task is started and is running, pause task - will trigger 2nd useEffect
       var tempPauseTime = Date.now();
       setStopTime(tempPauseTime);
     } else if (hasStarted && !isOn) {
-      // restart task and set isOn
+      // if task is started but it is paused, restart task and set isOn - will trigger 1st useEffect
       var _tempStartTime = Date.now();
 
       setStartTime(_tempStartTime);
@@ -37519,17 +37580,19 @@ function TimerControls() {
   };
 
   var handleStop = function handleStop() {
-    var tempPauseTime = Date.now();
-    setHasFinished(true);
-    setStopTime(tempPauseTime);
-  };
+    var tempStopTime = Date.now();
+    setStopTime(tempStopTime); // setting stop time - will trigger 2nd useEffect
+
+    setHasFinished(true); // set task as complet - trigger 3rd useEffect
+  }; // when reset button is clicked
+
 
   var resetTask = function resetTask() {
     setHasStarted(false);
     setIsOn(false);
-    setHasFinished(false);
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
+    setHasFinished(false); // clearInterval(intervalRef.current);
+    // intervalRef.current = null;
+
     setTimeElapsed(0);
     setTaskNumber(0);
     setStartTime(0);
@@ -37541,43 +37604,51 @@ function TimerControls() {
 
   (0, _react.useEffect)(function () {
     if (!hasStarted && !isOn && startTime > 0) {
-      setHasStarted(true);
-      setIsOn(true);
+      // first time task is started (start time is set in previous step)
+      setHasStarted(true); // set as task started
+
+      setIsOn(true); // set as task running
+
+      setIsLoading(true); // set as loading while we wait for confirmation from server that task has been created. timer will only start when server response is ok
 
       _axios.default.post("".concat(_env.envVariables.endpointBase, "create-task"), {
         name: nameTask,
         startTime: startTime
       }).then(function (res) {
-        var id; // get id back and set local state
+        var id; // get task id back from server and set local state for future use
 
         if (res.data.data.id.jobId) {
-          id = res.data.data.id.jobId; // postgres
+          id = res.data.data.id.jobId; // postgres returns the id column name
         } else {
-          id = res.data.data.id; // sqlite
+          id = res.data.data.id; // sqlite return the id, less nested than postgress
         }
 
-        setTaskNumber(id);
-        localStorage.setItem("task", JSON.stringify({
-          startTime: startTime,
-          id: id
-        }));
+        setTaskNumber(id); // set task id as local state
+        // start counter
+
         intervalRef.current = setInterval(function () {
+          // starts at 0 (time elapsed, and adds 1 every 1000 miliseconds)
           setTimeElapsed(function (timeElapsed) {
             return timeElapsed + 1;
           });
         }, 1000);
       }).catch(function (err) {
-        var message = err.response.data.data.message;
+        // if server gives no response, it is likely to be down
+        if (!err.response) {
+          (0, _helpers.handleDisplayMessage)("The server seems to be offline. Please check with the owner of the app :)", setErrorMessage);
+        } // display error messages
 
-        if (message) {
-          setErrorMessage(message);
-        } else {
-          setErrorMessage("There was an error. Pleas try again later.");
-        }
+
+        (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+      }).finally(function () {
+        // clear loading state
+        setIsLoading(false);
       });
     } else if (hasStarted && !isOn) {
-      // restart timer path
-      setIsOn(true);
+      // if task is paused when start/pause button is clicked
+      setIsOn(true); // set as running, again
+      // restart the counter
+
       intervalRef.current = setInterval(function () {
         setTimeElapsed(function (timeElapsed) {
           return timeElapsed + 1;
@@ -37586,28 +37657,31 @@ function TimerControls() {
     }
   }, [startTime]);
   (0, _react.useEffect)(function () {
-    setIsOn(false);
-    var diffTime = stopTime - startTime;
+    if (isOn && stopTime > 0 && startTime > 0 && !hasFinished) {
+      setIsOn(false); // set task as not running
 
-    if (stopTime > 0 && startTime > 0 && !hasFinished) {
-      // const { id } = JSON.parse(localStorage.getItem("task"));
-      // call db and set length of task
+      var diffTime = stopTime - startTime; // if active task has been paused, we need to save interval of time in the server
+
       _axios.default.put("".concat(_env.envVariables.endpointBase, "pause-task"), {
         id: taskNumber,
         diffTime: diffTime
-      }).then(function () {}).catch(function (err) {
-        var message = err.response.data.data.message;
-        (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
-      }).finally(function () {
-        setTaskStatus("paused");
+      }).then(function () {
+        setTaskStatus("Paused"); // once server confirms pausing has been saved, we sync frontend
+
         if (intervalRef.current === null) return;
-        clearInterval(intervalRef.current);
+        clearInterval(intervalRef.current); // we clear the interval to stop it
+
         intervalRef.current = null;
-      });
+      }).catch(function (err) {
+        (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+      }); // }
+
     }
   }, [stopTime]);
   (0, _react.useEffect)(function () {
     if (hasFinished && isOn) {
+      // when task is stopped while running
+      // update server with needed info: additional length of the session + end time
       var diffTime = stopTime - startTime;
 
       _axios.default.put("".concat(_env.envVariables.endpointBase, "finish-task"), {
@@ -37615,10 +37689,9 @@ function TimerControls() {
         diffTime: diffTime,
         stopTime: stopTime
       }).then(function () {
-        setTaskStatus("completed");
+        setTaskStatus("Completed"); // set status as completed
       }).catch(function (err) {
-        var message = err.response.data.data.message;
-        (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
+        (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
       });
 
       setIsOn(false);
@@ -37626,21 +37699,21 @@ function TimerControls() {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     } else if (hasFinished && !isOn) {
-      var _diffTime = 0;
+      // if task is stopped while paused
+      var _diffTime = 0; // the new length to add is 0 since we don't want to increment the length in the server
 
       _axios.default.put("".concat(_env.envVariables.endpointBase, "finish-task"), {
         id: taskNumber,
         diffTime: _diffTime,
         stopTime: stopTime
       }).then(function () {
-        setTaskStatus("completed");
+        setTaskStatus("Completed");
       }).catch(function (err) {
-        var message = err.response.data.data.message;
-        (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
+        (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
       });
     }
   }, [hasFinished]);
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("button", {
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleStartPause,
     disabled: hasFinished ? true : false
   }, isOn ? "Pause" : hasStarted ? "Restart" : "Start"), hasStarted ? /*#__PURE__*/_react.default.createElement("button", {
@@ -37650,7 +37723,7 @@ function TimerControls() {
     onClick: resetTask
   }, "Start New Task") : null);
 }
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../context/context":"context/context.js","../../../config/env":"../config/env.js","../../helpers/helpers":"helpers/helpers.js"}],"components/CreateTask.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","../../context/context":"context/context.js","../../../config/env":"../config/env.js","../../helpers/helpers":"helpers/helpers.js"}],"components/CreateTask.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37663,6 +37736,8 @@ var _react = _interopRequireWildcard(require("react"));
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 var _InputField = _interopRequireDefault(require("./createtask/InputField"));
+
+var _Status = _interopRequireDefault(require("./createtask/Status"));
 
 var _ShowTimeSpent = _interopRequireDefault(require("./createtask/ShowTimeSpent"));
 
@@ -37682,7 +37757,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  border: 5px solid blue;\n  width: 50%;\n  min-height: 400px;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  div {\n    height: 75px;\n    width: 100%;\n    border: 1px solid green;\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    align-items: center;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  border: 0.5px solid #737373;\n  box-shadow: 10px 5px 15px #737373;\n  border-radius: 5px;\n  width: 50%;\n  min-height: 400px;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  div {\n    height: 75px;\n    width: 100%;\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    align-items: center;\n  }\n"])));
 
 function CreateTask() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -37705,9 +37780,9 @@ function CreateTask() {
     clearInterval(intervalRef.current);
     intervalRef.current = null;
   }, []);
-  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_InputField.default, null), /*#__PURE__*/_react.default.createElement(_ShowTimeSpent.default, null), /*#__PURE__*/_react.default.createElement(_TimerControls.default, null));
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_InputField.default, null), /*#__PURE__*/_react.default.createElement(_Status.default, null), /*#__PURE__*/_react.default.createElement(_ShowTimeSpent.default, null), /*#__PURE__*/_react.default.createElement(_TimerControls.default, null));
 }
-},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./createtask/InputField":"components/createtask/InputField.js","./createtask/ShowTimeSpent":"components/createtask/ShowTimeSpent.js","./createtask/TimerControls":"components/createtask/TimerControls.js","../context/context":"context/context.js","../helpers/helpers":"helpers/helpers.js"}],"components/history/BackHomeButton.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./createtask/InputField":"components/createtask/InputField.js","./createtask/Status":"components/createtask/Status.js","./createtask/ShowTimeSpent":"components/createtask/ShowTimeSpent.js","./createtask/TimerControls":"components/createtask/TimerControls.js","../context/context":"context/context.js","../helpers/helpers":"helpers/helpers.js"}],"components/history/BackHomeButton.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37719,26 +37794,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactRouterDom = require("react-router-dom");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function BackHomeButton() {
-  return /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
-    to: "/"
-  }, "Back Home Page");
-}
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/history/TaskDetail.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = TaskDetail;
-
-var _react = _interopRequireDefault(require("react"));
-
 var _styledComponents = _interopRequireDefault(require("styled-components"));
-
-var _reactRouterDom = require("react-router-dom");
 
 var _templateObject;
 
@@ -37746,20 +37802,77 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start;\n  align-items: center;\n  section {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-start;\n    align-items: center;\n  }\n"])));
+var StyledLink = (0, _styledComponents.default)(_reactRouterDom.Link)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  font-size: 1.5rem;\n  padding: 3rem;\n"])));
+
+function BackHomeButton() {
+  return /*#__PURE__*/_react.default.createElement(StyledLink, {
+    to: "/"
+  }, "Back Home Page");
+}
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js"}],"components/history/TaskDetail.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = TaskDetail;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _env = require("../../../config/env");
+
+var _context = _interopRequireDefault(require("../../context/context"));
+
+var _helpers = require("../../helpers/helpers");
+
+var _templateObject;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start;\n  align-items: center;\n  padding: 0.5rem 3rem;\n  section {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-start;\n    align-items: center;\n  }\n"])));
 
 function TaskDetail(_ref) {
   var task = _ref.task;
+
+  var _useContext = (0, _react.useContext)(_context.default),
+      setAllTasks = _useContext.setAllTasks,
+      setToastMessage = _useContext.setToastMessage,
+      setErrorMessage = _useContext.setErrorMessage;
+
   var length = task.length,
       isFinished = task.isFinished;
   var lenghtInNumb = parseInt(length, 10); // because Postgres returns bigint data in string for accuracy reasons http://knexjs.org/#Schema-bigInteger
 
   var dateObject = new Date(lenghtInNumb);
-  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("section", null, /*#__PURE__*/_react.default.createElement("h1", null, "".concat(task.name ? task.name : "No name yet", " |  ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished")), !isFinished ? /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
-    to: "/".concat(task.jobId)
-  }, /*#__PURE__*/_react.default.createElement("button", null, "Go to task")) : null));
+
+  var handleDelete = function handleDelete(e) {
+    e.preventDefault();
+
+    _axios.default.delete("".concat(_env.envVariables.endpointBase, "task/").concat(task.jobId, "/delete")).then(function (res) {
+      var data = res.data.data;
+      setAllTasks(data);
+      (0, _helpers.handleDisplayMessage)("Task deleted", setToastMessage);
+    }).catch(function (err) {
+      (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+    });
+  };
+
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("section", null, /*#__PURE__*/_react.default.createElement("h1", null, "".concat(task.name ? task.name : "No name yet", " |  ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished")), /*#__PURE__*/_react.default.createElement("button", {
+    onClick: handleDelete,
+    value: "delete"
+  }, "Delete")));
 }
-},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/history/AllTasks.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","axios":"../node_modules/axios/index.js","../../../config/env":"../config/env.js","../../context/context":"context/context.js","../../helpers/helpers":"helpers/helpers.js"}],"components/history/AllTasks.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37769,9 +37882,13 @@ exports.default = AllTasks;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
 var _TaskDetail = _interopRequireDefault(require("./TaskDetail"));
 
 var _context = _interopRequireDefault(require("../../context/context"));
+
+var _templateObject;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37779,8 +37896,10 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-// components
-// context
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  padding: 3rem;\n"])));
+
 function AllTasks() {
   var _useContext = (0, _react.useContext)(_context.default),
       allTasks = _useContext.allTasks,
@@ -37790,7 +37909,7 @@ function AllTasks() {
     return /*#__PURE__*/_react.default.createElement("div", null, "No tasks yet");
   }
 
-  return /*#__PURE__*/_react.default.createElement("div", null, filteredTasks.length > 0 ? filteredTasks.map(function (task) {
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, filteredTasks.length > 0 ? filteredTasks.map(function (task) {
     return /*#__PURE__*/_react.default.createElement(_TaskDetail.default, {
       task: task,
       key: task.jobId
@@ -37802,7 +37921,7 @@ function AllTasks() {
     });
   }));
 }
-},{"react":"../node_modules/react/index.js","./TaskDetail":"components/history/TaskDetail.js","../../context/context":"context/context.js"}],"components/history/DateSelector.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./TaskDetail":"components/history/TaskDetail.js","../../context/context":"context/context.js"}],"components/history/DateSelector.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37853,7 +37972,7 @@ function DateSelector(_ref) {
     }
   }, /*#__PURE__*/_react.default.createElement("option", {
     value: "",
-    selected: !datePick[type][name] ? true : false
+    defaultValue: !datePick[type][name] ? true : false
   }, "--Choose a ".concat(name, "--")), dates.map(function (date) {
     return /*#__PURE__*/_react.default.createElement("option", {
       value: date,
@@ -38004,7 +38123,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  border: 0.5px solid #737373;\n  box-shadow: 10px 5px 15px #737373;\n  border-radius: 5px;\n  width: 85%;\n  padding: 2rem;\n"])));
 
 function TaskHistory() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -38013,19 +38132,61 @@ function TaskHistory() {
       hasStarted = _useContext.hasStarted,
       isOn = _useContext.isOn,
       startTime = _useContext.startTime,
-      hasFinished = _useContext.hasFinished;
+      hasFinished = _useContext.hasFinished,
+      taskNumber = _useContext.taskNumber,
+      stopTime = _useContext.stopTime,
+      setStopTime = _useContext.setStopTime,
+      setIsOn = _useContext.setIsOn,
+      setTaskStatus = _useContext.setTaskStatus,
+      intervalRef = _useContext.intervalRef,
+      autoPaused = _useContext.autoPaused,
+      setAutoPaused = _useContext.setAutoPaused;
+
+  (0, _react.useEffect)(function () {
+    if (hasStarted && startTime && isOn) {
+      var tempPauseTime = Date.now();
+      setIsOn(false); // set task as not running
+
+      setAutoPaused(true);
+      setStopTime(tempPauseTime);
+    }
+  }, []);
+  (0, _react.useEffect)(function () {
+    if (hasStarted && startTime && autoPaused && !hasFinished) {
+      var diffTime = stopTime - startTime;
+
+      _axios.default.put("".concat(_env.envVariables.endpointBase, "pause-task"), {
+        id: taskNumber,
+        diffTime: diffTime
+      }).then(function (res) {
+        setTaskStatus("Paused"); // once server confirms pausing has been saved, we sync frontend
+
+        if (intervalRef.current === null) return;
+        clearInterval(intervalRef.current); // we clear the interval to stop it
+
+        intervalRef.current = null;
+        setAutoPaused(false);
+        getTasks();
+      }).catch(function (err) {
+        (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+      });
+    }
+  }, [stopTime]);
+
+  function getTasks() {
+    _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
+      setAllTasks(res.data.data);
+    }).catch(function (err) {
+      (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+    });
+  }
 
   (0, _react.useEffect)(function () {
     _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
       setAllTasks(res.data.data);
     }).catch(function (err) {
-      var message = err.response.data.data.message;
-      (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
+      (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
     });
-  }, []);
-  (0, _react.useEffect)(function () {
-    if (hasStarted && startTime && isOn && !hasFinished) // call db to update latest know elapsed time
-      console.log("gota save!");
   }, []);
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_DatePicker.default, null), /*#__PURE__*/_react.default.createElement(_AllTasks.default, null), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
 }
@@ -38047,84 +38208,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function NotFound() {
   return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h1", null, "404 not found"), /*#__PURE__*/_react.default.createElement(_BackHomeButton.default, null));
 }
-},{"react":"../node_modules/react/index.js","./history/BackHomeButton":"components/history/BackHomeButton.js"}],"components/EditTask.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = EditTask;
-
-var _react = _interopRequireWildcard(require("react"));
-
-var _styledComponents = _interopRequireDefault(require("styled-components"));
-
-var _axios = _interopRequireDefault(require("axios"));
-
-var _InputField = _interopRequireDefault(require("./createtask/InputField"));
-
-var _ShowTimeSpent = _interopRequireDefault(require("./createtask/ShowTimeSpent"));
-
-var _TimerControls = _interopRequireDefault(require("./createtask/TimerControls"));
-
-var _context = _interopRequireDefault(require("../context/context"));
-
-var _env = require("../../config/env");
-
-var _helpers = require("../helpers/helpers");
-
-var _templateObject;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  border: 5px solid blue;\n  width: 50%;\n  min-height: 400px;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  div {\n    height: 75px;\n    width: 100%;\n    border: 1px solid green;\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    align-items: center;\n  }\n"])));
-
-function EditTask(_ref) {
-  var match = _ref.match;
-  var taskId = match.params.taskId;
-
-  var _useContext = (0, _react.useContext)(_context.default),
-      setTimeElapsed = _useContext.setTimeElapsed,
-      setHasStarted = _useContext.setHasStarted,
-      setTaskNumber = _useContext.setTaskNumber,
-      setNameTask = _useContext.setNameTask,
-      setInputField = _useContext.setInputField,
-      setErrorMessage = _useContext.setErrorMessage,
-      intervalRef = _useContext.intervalRef,
-      setStartTime = _useContext.setStartTime,
-      setStopTime = _useContext.setStopTime,
-      setTaskStatus = _useContext.setTaskStatus;
-
-  (0, _react.useEffect)(function () {
-    _axios.default.get("".concat(_env.envVariables.endpointBase, "task-").concat(taskId)).then(function (res) {
-      var _res$data$data = res.data.data,
-          length = _res$data$data.length,
-          jobId = _res$data$data.jobId,
-          name = _res$data$data.name;
-      setTimeElapsed(Math.floor(length / 1000));
-      setHasStarted(true);
-      setTaskNumber(jobId);
-      setNameTask(name);
-      setInputField(name);
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-      setStartTime(0);
-      setStopTime(0);
-      setTaskStatus("paused");
-    }).catch(function (err) {
-      var message = err.response.data.data.message;
-      (0, _helpers.handleDisplayMessage)(message, setErrorMessage);
-    });
-  }, []);
-  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_InputField.default, null), /*#__PURE__*/_react.default.createElement(_ShowTimeSpent.default, null), /*#__PURE__*/_react.default.createElement(_TimerControls.default, null));
-}
-},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","axios":"../node_modules/axios/index.js","./createtask/InputField":"components/createtask/InputField.js","./createtask/ShowTimeSpent":"components/createtask/ShowTimeSpent.js","./createtask/TimerControls":"components/createtask/TimerControls.js","../context/context":"context/context.js","../../config/env":"../config/env.js","../helpers/helpers":"helpers/helpers.js"}],"routes/Routes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./history/BackHomeButton":"components/history/BackHomeButton.js"}],"routes/Routes.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38142,8 +38226,6 @@ var _TaskHistory = _interopRequireDefault(require("../components/TaskHistory"));
 
 var _NotFound = _interopRequireDefault(require("../components/NotFound"));
 
-var _EditTask = _interopRequireDefault(require("../components/EditTask"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // components
@@ -38156,13 +38238,10 @@ function Routes() {
     path: "/history",
     component: _TaskHistory.default
   }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
-    path: "/:taskId",
-    component: _EditTask.default
-  }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
     component: _NotFound.default
   })));
 }
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../components/CreateTask":"components/CreateTask.js","../components/TaskHistory":"components/TaskHistory.js","../components/NotFound":"components/NotFound.js","../components/EditTask":"components/EditTask.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../components/CreateTask":"components/CreateTask.js","../components/TaskHistory":"components/TaskHistory.js","../components/NotFound":"components/NotFound.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireWildcard(require("react"));
@@ -38203,7 +38282,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  border: 5px solid green;\n  min-height: 100vh;\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  min-height: 100vh;\n"])));
 
 var App = function App() {
   var _useState = (0, _react.useState)(false),
@@ -38218,65 +38297,80 @@ var App = function App() {
 
   var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
-      hasFinished = _useState6[0],
-      setHasFinished = _useState6[1];
+      autoPaused = _useState6[0],
+      setAutoPaused = _useState6[1];
 
   var _useState7 = (0, _react.useState)(0),
       _useState8 = _slicedToArray(_useState7, 2),
-      timeElapsed = _useState8[0],
-      setTimeElapsed = _useState8[1];
+      lengthTime = _useState8[0],
+      setLengthTime = _useState8[1];
 
-  var _useState9 = (0, _react.useState)(0),
+  var _useState9 = (0, _react.useState)(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      taskNumber = _useState10[0],
-      setTaskNumber = _useState10[1];
+      isLoading = _useState10[0],
+      setIsLoading = _useState10[1];
 
-  var _useState11 = (0, _react.useState)(""),
+  var _useState11 = (0, _react.useState)(false),
       _useState12 = _slicedToArray(_useState11, 2),
-      inputField = _useState12[0],
-      setInputField = _useState12[1];
+      hasFinished = _useState12[0],
+      setHasFinished = _useState12[1];
 
-  var _useState13 = (0, _react.useState)(""),
+  var _useState13 = (0, _react.useState)(0),
       _useState14 = _slicedToArray(_useState13, 2),
-      nameTask = _useState14[0],
-      setNameTask = _useState14[1];
+      timeElapsed = _useState14[0],
+      setTimeElapsed = _useState14[1];
 
-  var _useState15 = (0, _react.useState)(""),
+  var _useState15 = (0, _react.useState)(0),
       _useState16 = _slicedToArray(_useState15, 2),
-      errorMessage = _useState16[0],
-      setErrorMessage = _useState16[1];
+      taskNumber = _useState16[0],
+      setTaskNumber = _useState16[1];
 
   var _useState17 = (0, _react.useState)(""),
       _useState18 = _slicedToArray(_useState17, 2),
-      toastMessage = _useState18[0],
-      setToastMessage = _useState18[1];
+      inputField = _useState18[0],
+      setInputField = _useState18[1];
 
-  var _useState19 = (0, _react.useState)(0),
+  var _useState19 = (0, _react.useState)(""),
       _useState20 = _slicedToArray(_useState19, 2),
-      startTime = _useState20[0],
-      setStartTime = _useState20[1];
+      nameTask = _useState20[0],
+      setNameTask = _useState20[1];
 
-  var _useState21 = (0, _react.useState)(0),
+  var _useState21 = (0, _react.useState)(""),
       _useState22 = _slicedToArray(_useState21, 2),
-      stopTime = _useState22[0],
-      setStopTime = _useState22[1];
+      errorMessage = _useState22[0],
+      setErrorMessage = _useState22[1];
 
   var _useState23 = (0, _react.useState)(""),
       _useState24 = _slicedToArray(_useState23, 2),
-      taskStatus = _useState24[0],
-      setTaskStatus = _useState24[1];
+      toastMessage = _useState24[0],
+      setToastMessage = _useState24[1];
 
-  var _useState25 = (0, _react.useState)([]),
+  var _useState25 = (0, _react.useState)(0),
       _useState26 = _slicedToArray(_useState25, 2),
-      allTasks = _useState26[0],
-      setAllTasks = _useState26[1];
+      startTime = _useState26[0],
+      setStartTime = _useState26[1];
 
-  var _useState27 = (0, _react.useState)([]),
+  var _useState27 = (0, _react.useState)(0),
       _useState28 = _slicedToArray(_useState27, 2),
-      filteredTasks = _useState28[0],
-      setFilteredTasks = _useState28[1];
+      stopTime = _useState28[0],
+      setStopTime = _useState28[1];
 
-  var _useState29 = (0, _react.useState)({
+  var _useState29 = (0, _react.useState)(""),
+      _useState30 = _slicedToArray(_useState29, 2),
+      taskStatus = _useState30[0],
+      setTaskStatus = _useState30[1];
+
+  var _useState31 = (0, _react.useState)([]),
+      _useState32 = _slicedToArray(_useState31, 2),
+      allTasks = _useState32[0],
+      setAllTasks = _useState32[1];
+
+  var _useState33 = (0, _react.useState)([]),
+      _useState34 = _slicedToArray(_useState33, 2),
+      filteredTasks = _useState34[0],
+      setFilteredTasks = _useState34[1];
+
+  var _useState35 = (0, _react.useState)({
     from: {
       day: undefined,
       month: undefined,
@@ -38288,9 +38382,9 @@ var App = function App() {
       year: undefined
     }
   }),
-      _useState30 = _slicedToArray(_useState29, 2),
-      datePick = _useState30[0],
-      setDatePick = _useState30[1];
+      _useState36 = _slicedToArray(_useState35, 2),
+      datePick = _useState36[0],
+      setDatePick = _useState36[1];
 
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
@@ -38298,6 +38392,8 @@ var App = function App() {
     setHasStarted: setHasStarted,
     isOn: isOn,
     setIsOn: setIsOn,
+    isLoading: isLoading,
+    setIsLoading: setIsLoading,
     hasFinished: hasFinished,
     setHasFinished: setHasFinished,
     timeElapsed: timeElapsed,
@@ -38324,7 +38420,11 @@ var App = function App() {
     filteredTasks: filteredTasks,
     setFilteredTasks: setFilteredTasks,
     inputField: inputField,
-    setInputField: setInputField
+    setInputField: setInputField,
+    autoPaused: autoPaused,
+    setAutoPaused: setAutoPaused,
+    lengthTime: lengthTime,
+    setLengthTime: setLengthTime
   };
   return /*#__PURE__*/_react.default.createElement(_context.default.Provider, {
     value: valueContext
@@ -38360,7 +38460,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54680" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61242" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

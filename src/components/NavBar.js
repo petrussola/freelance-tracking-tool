@@ -7,21 +7,22 @@ const StyledDiv = styled.div`
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  border-bottom: 2px solid red;
+  border-bottom: 2px solid #737373;
   width: 100%;
+  color: #737373;
   h1 {
     font-size: 2rem;
     padding: 1rem;
     min-width: 200px;
     text-align: center;
     :hover {
-      background-color: red;
+      background-color: #737373;
       color: white;
     }
   }
   a {
     text-decoration: none;
-    color: red;
+    color: #737373;
   }
 `;
 

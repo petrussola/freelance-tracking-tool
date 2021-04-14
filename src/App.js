@@ -18,13 +18,15 @@ const StyledDiv = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  border: 5px solid green;
   min-height: 100vh;
 `;
 
 const App = () => {
   const [hasStarted, setHasStarted] = useState(false);
   const [isOn, setIsOn] = useState(false);
+  const [autoPaused, setAutoPaused] = useState(false);
+  const [lengthTime, setLengthTime] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [taskNumber, setTaskNumber] = useState(0);
@@ -56,6 +58,8 @@ const App = () => {
     setHasStarted,
     isOn,
     setIsOn,
+    isLoading,
+    setIsLoading,
     hasFinished,
     setHasFinished,
     timeElapsed,
@@ -83,6 +87,10 @@ const App = () => {
     setFilteredTasks,
     inputField,
     setInputField,
+    autoPaused,
+    setAutoPaused,
+    lengthTime,
+    setLengthTime,
   };
 
   return (
