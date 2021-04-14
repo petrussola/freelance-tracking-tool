@@ -23,13 +23,18 @@ const StyledDiv = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    font-size: 1rem;
   }
 `;
 export default function TaskDetail({ task }) {
   const { setAllTasks, setToastMessage, setErrorMessage } = useContext(
     TimerContext
   );
-  const { length, isFinished } = task;
+  const { length, isFinished, startTime } = task;
+  const startTimeObject = new Date(startTime);
+  const definedStartDate = `${startTimeObject.getDate()}/${
+    startTimeObject.getMonth() + 1
+  }/${startTimeObject.getFullYear()}`;
   const lenghtInNumb = parseInt(length, 10); // because Postgres returns bigint data in string for accuracy reasons http://knexjs.org/#Schema-bigInteger
   const dateObject = new Date(lenghtInNumb);
 
@@ -50,11 +55,13 @@ export default function TaskDetail({ task }) {
   return (
     <StyledDiv>
       <section>
-        <h1>{`${task.name ? task.name : "No name yet"} |  ${
+        {`${
+          task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️"
+        } |  Started on: ${definedStartDate} | ${
           dateObject.getHours() - 1
         } hours : ${dateObject.getMinutes()} minutes :  ${dateObject.getSeconds()} seconds | ${
           isFinished ? "Completed 🎉" : "Not finished"
-        }`}</h1>
+        }`}
         <button onClick={handleDelete} value="delete">
           Delete
         </button>

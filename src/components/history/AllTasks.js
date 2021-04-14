@@ -12,15 +12,17 @@ const StyledDiv = styled.div`
 `;
 
 export default function AllTasks() {
-  const { allTasks, filteredTasks } = useContext(TimerContext);
+  const { allTasks, filteredTasks, isFiltered } = useContext(TimerContext);
 
   if (allTasks.length === 0) {
     return <div>No tasks yet</div>;
+  } else if (isFiltered && filteredTasks.length === 0) {
+    return <div>No tasks match your search criteria</div>;
   }
 
   return (
     <StyledDiv>
-      {filteredTasks.length > 0
+      {filteredTasks && isFiltered
         ? filteredTasks.map((task) => (
             <TaskDetail task={task} key={task.jobId} />
           ))

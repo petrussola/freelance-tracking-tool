@@ -37839,7 +37839,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start;\n  align-items: center;\n  padding: 0.5rem 3rem;\n  section {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-start;\n    align-items: center;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start;\n  align-items: center;\n  padding: 0.5rem 3rem;\n  section {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-start;\n    align-items: center;\n    font-size: 1rem;\n  }\n"])));
 
 function TaskDetail(_ref) {
   var task = _ref.task;
@@ -37850,7 +37850,10 @@ function TaskDetail(_ref) {
       setErrorMessage = _useContext.setErrorMessage;
 
   var length = task.length,
-      isFinished = task.isFinished;
+      isFinished = task.isFinished,
+      startTime = task.startTime;
+  var startTimeObject = new Date(startTime);
+  var definedStartDate = "".concat(startTimeObject.getDate(), "/").concat(startTimeObject.getMonth() + 1, "/").concat(startTimeObject.getFullYear());
   var lenghtInNumb = parseInt(length, 10); // because Postgres returns bigint data in string for accuracy reasons http://knexjs.org/#Schema-bigInteger
 
   var dateObject = new Date(lenghtInNumb);
@@ -37867,7 +37870,7 @@ function TaskDetail(_ref) {
     });
   };
 
-  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("section", null, /*#__PURE__*/_react.default.createElement("h1", null, "".concat(task.name ? task.name : "No name yet", " |  ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished")), /*#__PURE__*/_react.default.createElement("button", {
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("section", null, "".concat(task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️", " |  Started on: ").concat(definedStartDate, " | ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished"), /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleDelete,
     value: "delete"
   }, "Delete")));
@@ -37903,13 +37906,16 @@ var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObjec
 function AllTasks() {
   var _useContext = (0, _react.useContext)(_context.default),
       allTasks = _useContext.allTasks,
-      filteredTasks = _useContext.filteredTasks;
+      filteredTasks = _useContext.filteredTasks,
+      isFiltered = _useContext.isFiltered;
 
   if (allTasks.length === 0) {
     return /*#__PURE__*/_react.default.createElement("div", null, "No tasks yet");
+  } else if (isFiltered && filteredTasks.length === 0) {
+    return /*#__PURE__*/_react.default.createElement("div", null, "No tasks match your search criteria");
   }
 
-  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, filteredTasks.length > 0 ? filteredTasks.map(function (task) {
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, filteredTasks && isFiltered ? filteredTasks.map(function (task) {
     return /*#__PURE__*/_react.default.createElement(_TaskDetail.default, {
       task: task,
       key: task.jobId
@@ -37972,7 +37978,7 @@ function DateSelector(_ref) {
     }
   }, /*#__PURE__*/_react.default.createElement("option", {
     value: "",
-    defaultValue: !datePick[type][name] ? true : false
+    selected: !datePick[type][name] ? true : false
   }, "--Choose a ".concat(name, "--")), dates.map(function (date) {
     return /*#__PURE__*/_react.default.createElement("option", {
       value: date,
@@ -37996,6 +38002,8 @@ var _DateSelector = _interopRequireDefault(require("./DateSelector"));
 
 var _context = _interopRequireDefault(require("../../context/context"));
 
+var _helpers = require("../../helpers/helpers");
+
 var _templateObject;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -38014,7 +38022,10 @@ function DatePicker() {
       datePick = _useContext.datePick,
       filteredTasks = _useContext.filteredTasks,
       setFilteredTasks = _useContext.setFilteredTasks,
-      setDatePick = _useContext.setDatePick;
+      setDatePick = _useContext.setDatePick,
+      isFiltered = _useContext.isFiltered,
+      setIsFiltered = _useContext.setIsFiltered,
+      setErrorMessage = _useContext.setErrorMessage;
 
   var handleFilter = function handleFilter() {
     var _datePick$from = datePick.from,
@@ -38025,18 +38036,26 @@ function DatePicker() {
         day2 = _datePick$to.day,
         month2 = _datePick$to.month,
         year2 = _datePick$to.year;
-    var dateLowerEnd = new Date(parseInt(year1, 10), parseInt(month1, 10), parseInt(day1, 10));
+    var dateLowerEnd = new Date(parseInt(year1, 10), parseInt(month1, 10), parseInt(day1, 10), 0, 0);
     var dateLowerEndParsed = Date.parse(dateLowerEnd);
-    var dateHigherEnd = new Date(parseInt(year2, 10), parseInt(month2, 10), parseInt(day2, 10));
+    var dateHigherEnd = new Date(parseInt(year2, 10), parseInt(month2, 10), parseInt(day2, 10), // adds 1 so we can cover the full day. Otherwise, it gets created at 00:00 am
+    23, 58);
     var dateHigherEndParsed = Date.parse(dateHigherEnd);
-    var filteredData = allTasks.filter(function (task) {
-      return parseInt(task.startTime, 10) > dateLowerEndParsed && parseInt(task.startTime, 10) < dateHigherEndParsed; // converting to integer because bigInt is returned as string for accuracy reasons http://knexjs.org/#Schema-bigInteger
-    });
-    setFilteredTasks(filteredData);
+
+    if (dateHigherEndParsed < dateLowerEndParsed) {
+      (0, _helpers.handleDisplayMessage)('"To" date must be later than "from" date', setErrorMessage);
+    } else {
+      var filteredData = allTasks.filter(function (task) {
+        return parseInt(task.startTime, 10) > dateLowerEndParsed && parseInt(task.startTime, 10) < dateHigherEndParsed; // converting to integer because bigInt is returned as string for accuracy reasons http://knexjs.org/#Schema-bigInteger
+      });
+      setIsFiltered(true);
+      setFilteredTasks(filteredData);
+    }
   };
 
   var clearFilter = function clearFilter() {
     setFilteredTasks([]);
+    setIsFiltered(false);
     setDatePick({
       from: {
         day: undefined,
@@ -38081,13 +38100,13 @@ function DatePicker() {
     to: 2021,
     name: "year",
     type: "to"
-  }), filteredTasks.length === 0 ? /*#__PURE__*/_react.default.createElement("button", {
+  }), filteredTasks.length === 0 && !isFiltered ? /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleFilter
   }, "Filter") : /*#__PURE__*/_react.default.createElement("button", {
     onClick: clearFilter
   }, "Clear filter"));
 }
-},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./DateSelector":"components/history/DateSelector.js","../../context/context":"context/context.js"}],"components/TaskHistory.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./DateSelector":"components/history/DateSelector.js","../../context/context":"context/context.js","../../helpers/helpers":"helpers/helpers.js"}],"components/TaskHistory.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38365,12 +38384,17 @@ var App = function App() {
       allTasks = _useState32[0],
       setAllTasks = _useState32[1];
 
-  var _useState33 = (0, _react.useState)([]),
+  var _useState33 = (0, _react.useState)(false),
       _useState34 = _slicedToArray(_useState33, 2),
-      filteredTasks = _useState34[0],
-      setFilteredTasks = _useState34[1];
+      isFiltered = _useState34[0],
+      setIsFiltered = _useState34[1];
 
-  var _useState35 = (0, _react.useState)({
+  var _useState35 = (0, _react.useState)([]),
+      _useState36 = _slicedToArray(_useState35, 2),
+      filteredTasks = _useState36[0],
+      setFilteredTasks = _useState36[1];
+
+  var _useState37 = (0, _react.useState)({
     from: {
       day: undefined,
       month: undefined,
@@ -38382,9 +38406,9 @@ var App = function App() {
       year: undefined
     }
   }),
-      _useState36 = _slicedToArray(_useState35, 2),
-      datePick = _useState36[0],
-      setDatePick = _useState36[1];
+      _useState38 = _slicedToArray(_useState37, 2),
+      datePick = _useState38[0],
+      setDatePick = _useState38[1];
 
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
@@ -38424,7 +38448,9 @@ var App = function App() {
     autoPaused: autoPaused,
     setAutoPaused: setAutoPaused,
     lengthTime: lengthTime,
-    setLengthTime: setLengthTime
+    setLengthTime: setLengthTime,
+    isFiltered: isFiltered,
+    setIsFiltered: setIsFiltered
   };
   return /*#__PURE__*/_react.default.createElement(_context.default.Provider, {
     value: valueContext

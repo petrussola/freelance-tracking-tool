@@ -7,6 +7,9 @@ import DateSelector from "./DateSelector";
 // context
 import TimerContext from "../../context/context";
 
+// helpers
+import { handleDisplayMessage } from "../../helpers/helpers";
+
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: row;
@@ -24,6 +27,9 @@ export default function DatePicker() {
     filteredTasks,
     setFilteredTasks,
     setDatePick,
+    isFiltered,
+    setIsFiltered,
+    setErrorMessage,
   } = useContext(TimerContext);
   const handleFilter = () => {
     const { day: day1, month: month1, year: year1 } = datePick.from;
@@ -31,25 +37,38 @@ export default function DatePicker() {
     const dateLowerEnd = new Date(
       parseInt(year1, 10),
       parseInt(month1, 10),
-      parseInt(day1, 10)
+      parseInt(day1, 10),
+      0,
+      0
     );
     const dateLowerEndParsed = Date.parse(dateLowerEnd);
     const dateHigherEnd = new Date(
       parseInt(year2, 10),
       parseInt(month2, 10),
-      parseInt(day2, 10)
+      parseInt(day2, 10), // adds 1 so we can cover the full day. Otherwise, it gets created at 00:00 am
+      23,
+      58
     );
     const dateHigherEndParsed = Date.parse(dateHigherEnd);
-    const filteredData = allTasks.filter((task) => {
-      return (
-        parseInt(task.startTime, 10) > dateLowerEndParsed &&
-        parseInt(task.startTime, 10) < dateHigherEndParsed
-      ); // converting to integer because bigInt is returned as string for accuracy reasons http://knexjs.org/#Schema-bigInteger
-    });
-    setFilteredTasks(filteredData);
+    if (dateHigherEndParsed < dateLowerEndParsed) {
+      handleDisplayMessage(
+        '"To" date must be later than "from" date',
+        setErrorMessage
+      );
+    } else {
+      const filteredData = allTasks.filter((task) => {
+        return (
+          parseInt(task.startTime, 10) > dateLowerEndParsed &&
+          parseInt(task.startTime, 10) < dateHigherEndParsed
+        ); // converting to integer because bigInt is returned as string for accuracy reasons http://knexjs.org/#Schema-bigInteger
+      });
+      setIsFiltered(true);
+      setFilteredTasks(filteredData);
+    }
   };
   const clearFilter = () => {
     setFilteredTasks([]);
+    setIsFiltered(false);
     setDatePick({
       from: {
         day: undefined,
@@ -73,7 +92,7 @@ export default function DatePicker() {
       <DateSelector from={1} to={31} name="day" type="to" />
       <DateSelector from={0} to={11} name="month" type="to" />
       <DateSelector from={2021} to={2021} name="year" type="to" />
-      {filteredTasks.length === 0 ? (
+      {filteredTasks.length === 0 && !isFiltered ? (
         <button onClick={handleFilter}>Filter</button>
       ) : (
         <button onClick={clearFilter}>Clear filter</button>

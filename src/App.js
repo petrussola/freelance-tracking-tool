@@ -38,6 +38,7 @@ const App = () => {
   const [stopTime, setStopTime] = useState(0);
   const [taskStatus, setTaskStatus] = useState("");
   const [allTasks, setAllTasks] = useState([]);
+  const [isFiltered, setIsFiltered] = useState(false);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [datePick, setDatePick] = useState({
     from: {
@@ -91,6 +92,8 @@ const App = () => {
     setAutoPaused,
     lengthTime,
     setLengthTime,
+    isFiltered,
+    setIsFiltered,
   };
 
   return (
