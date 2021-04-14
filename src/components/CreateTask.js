@@ -23,13 +23,10 @@ const StyledDiv = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  div {
-    height: 75px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  padding: 2rem;
+  @media (max-width: 600px) {
+    width: 95vw;
+    padding: 0.5rem;
   }
 `;
 

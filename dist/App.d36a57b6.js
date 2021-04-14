@@ -37380,7 +37380,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  font-size: 1.5rem;\n  input {\n    height: 3rem;\n    padding: 0 3rem;\n    margin-left: 15%;\n    border: 0.2px solid #737373;\n    border-radius: 5px;\n    font-size: 1.5rem;\n    width: 50%;\n  }\n  button {\n    border: 1px solid green;\n    color: white;\n    background-color: green;\n  }\n  form {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    justify-content: flex-start;\n    width: 100%;\n  }\n  h1 {\n    width: 50%;\n    margin-left: 15%;\n    padding-left: 3rem;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-flow: row wrap;\n  align-items: center;\n  justify-content: center;\n  font-size: 1.5rem;\n  max-width: 100%;\n  @media (max-width: 600px) {\n    flex-direction: column;\n    justify-content: center;\n    align-items: center;\n  }\n  form {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    justify-content: flex-start;\n    width: 100%;\n    @media (max-width: 600px) {\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: center;\n    }\n  }\n  input {\n    height: 3rem;\n    padding: 0 3rem;\n    margin-left: 15%;\n    border: 0.2px solid #737373;\n    border-radius: 5px;\n    font-size: 1.5rem;\n    width: 50%;\n    @media (max-width: 600px) {\n      margin: 0.5rem;\n      width: 90%;\n    }\n  }\n  button {\n    border: 1px solid green;\n    color: white;\n    background-color: green;\n    @media (max-width: 600px) {\n      width: 90%;\n    }\n  }\n\n  h1 {\n    width: 50%;\n    margin-left: 15%;\n    padding-left: 3rem;\n  }\n"])));
 
 function InputField() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -37446,7 +37446,11 @@ exports.default = Status;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
 var _context = _interopRequireDefault(require("../../context/context"));
+
+var _templateObject;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37454,19 +37458,22 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-// context
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  height: 3rem;\n  @media (max-width: 600px) {\n    width: 100%;\n  }\n"])));
+
 function Status() {
   var _useContext = (0, _react.useContext)(_context.default),
       isLoading = _useContext.isLoading,
       taskStatus = _useContext.taskStatus;
 
   if (isLoading) {
-    return /*#__PURE__*/_react.default.createElement("div", null, "Loading...");
+    return /*#__PURE__*/_react.default.createElement(StyledDiv, null, "Loading...");
   }
 
-  return /*#__PURE__*/_react.default.createElement("div", null, taskStatus.length > 0 ? "Status: ".concat(taskStatus) : null);
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, taskStatus.length > 0 ? "Status: ".concat(taskStatus) : null);
 }
-},{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/createtask/ShowTimeSpent.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","../../context/context":"context/context.js"}],"components/createtask/ShowTimeSpent.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37535,7 +37542,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  margin-top: 3rem;\n  button {\n    border: 1px solid green;\n    color: white;\n    background-color: green;\n    :disabled {\n      background-color: grey;\n      border: 1px solid grey;\n    }\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  margin-top: 3rem;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  @media (max-width: 600px) {\n    display: flex;\n    flex-direction: column;\n    width: 100%;\n  }\n  button {\n    border: 1px solid green;\n    color: white;\n    background-color: green;\n    @media (max-width: 600px) {\n      min-width: 90%;\n      margin: 0.5rem 0;\n    }\n    :disabled {\n      background-color: grey;\n      border: 1px solid grey;\n    }\n  }\n"])));
 
 function TimerControls() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -37757,7 +37764,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  border: 0.5px solid #737373;\n  box-shadow: 10px 5px 15px #737373;\n  border-radius: 5px;\n  width: 50%;\n  min-height: 400px;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  div {\n    height: 75px;\n    width: 100%;\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    align-items: center;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  border: 0.5px solid #737373;\n  box-shadow: 10px 5px 15px #737373;\n  border-radius: 5px;\n  width: 50%;\n  min-height: 400px;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  padding: 2rem;\n  @media (max-width: 600px) {\n    width: 95vw;\n    padding: 0.5rem;\n  }\n"])));
 
 function CreateTask() {
   var _useContext = (0, _react.useContext)(_context.default),

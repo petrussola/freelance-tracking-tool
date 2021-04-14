@@ -13,10 +13,23 @@ import { handleDisplayMessage } from "../../helpers/helpers";
 
 const StyledDiv = styled.div`
   margin-top: 3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  @media (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
   button {
     border: 1px solid green;
     color: white;
     background-color: green;
+    @media (max-width: 600px) {
+      min-width: 90%;
+      margin: 0.5rem 0;
+    }
     :disabled {
       background-color: grey;
       border: 1px solid grey;
