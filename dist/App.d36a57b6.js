@@ -38407,34 +38407,38 @@ var App = function App() {
 
   var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
-      autoPaused = _useState6[0],
-      setAutoPaused = _useState6[1]; // when user goes to history without pausing, the task will autopause
-
+      hasFinished = _useState6[0],
+      setHasFinished = _useState6[1];
 
   var _useState7 = (0, _react.useState)(false),
       _useState8 = _slicedToArray(_useState7, 2),
       isLoading = _useState8[0],
-      setIsLoading = _useState8[1];
+      setIsLoading = _useState8[1]; // while making api calls to the backend
+
 
   var _useState9 = (0, _react.useState)(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      hasFinished = _useState10[0],
-      setHasFinished = _useState10[1];
+      autoPaused = _useState10[0],
+      setAutoPaused = _useState10[1]; // when user goes to history without pausing, the task will autopause
+
 
   var _useState11 = (0, _react.useState)(0),
       _useState12 = _slicedToArray(_useState11, 2),
       timeElapsed = _useState12[0],
-      setTimeElapsed = _useState12[1];
+      setTimeElapsed = _useState12[1]; // keeps track of time elapsed in the counter
+
 
   var _useState13 = (0, _react.useState)(0),
       _useState14 = _slicedToArray(_useState13, 2),
       taskNumber = _useState14[0],
-      setTaskNumber = _useState14[1];
+      setTaskNumber = _useState14[1]; // keeps track of the task being created and counted
+
 
   var _useState15 = (0, _react.useState)(""),
       _useState16 = _slicedToArray(_useState15, 2),
       inputField = _useState16[0],
-      setInputField = _useState16[1];
+      setInputField = _useState16[1]; // values that User types in the input field for the task name
+
 
   var _useState17 = (0, _react.useState)(""),
       _useState18 = _slicedToArray(_useState17, 2),
@@ -38454,37 +38458,44 @@ var App = function App() {
   var _useState23 = (0, _react.useState)(0),
       _useState24 = _slicedToArray(_useState23, 2),
       startTime = _useState24[0],
-      setStartTime = _useState24[1];
+      setStartTime = _useState24[1]; // tracks length of session
+
 
   var _useState25 = (0, _react.useState)(0),
       _useState26 = _slicedToArray(_useState25, 2),
       stopTime = _useState26[0],
-      setStopTime = _useState26[1];
+      setStopTime = _useState26[1]; // tracks length of session
+
 
   var _useState27 = (0, _react.useState)(""),
       _useState28 = _slicedToArray(_useState27, 2),
       taskStatus = _useState28[0],
-      setTaskStatus = _useState28[1];
+      setTaskStatus = _useState28[1]; // task status displayed on screen
+
 
   var _useState29 = (0, _react.useState)([]),
       _useState30 = _slicedToArray(_useState29, 2),
       allTasks = _useState30[0],
-      setAllTasks = _useState30[1];
+      setAllTasks = _useState30[1]; // grabs all tasks when User lands in History
+
 
   var _useState31 = (0, _react.useState)(false),
       _useState32 = _slicedToArray(_useState31, 2),
       isFiltered = _useState32[0],
-      setIsFiltered = _useState32[1];
+      setIsFiltered = _useState32[1]; // tracks if User is filtering results
+
 
   var _useState33 = (0, _react.useState)([]),
       _useState34 = _slicedToArray(_useState33, 2),
       filteredTasks = _useState34[0],
-      setFilteredTasks = _useState34[1];
+      setFilteredTasks = _useState34[1]; // tracks filtered tasks
+
 
   var _useState35 = (0, _react.useState)({}),
       _useState36 = _slicedToArray(_useState35, 2),
       editedTask = _useState36[0],
-      setEditedTask = _useState36[1];
+      setEditedTask = _useState36[1]; // tracks tasks being edited after User continues previously unfinished task
+
 
   var _useState37 = (0, _react.useState)({
     from: {
@@ -38500,9 +38511,11 @@ var App = function App() {
   }),
       _useState38 = _slicedToArray(_useState37, 2),
       datePick = _useState38[0],
-      setDatePick = _useState38[1];
+      setDatePick = _useState38[1]; // tracks filter dates
 
-  var intervalRef = (0, _react.useRef)(null);
+
+  var intervalRef = (0, _react.useRef)(null); // allows elapsed time to persist across component rendering
+
   var valueContext = {
     hasStarted: hasStarted,
     setHasStarted: setHasStarted,

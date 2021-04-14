@@ -28,22 +28,22 @@ const StyledDiv = styled.div`
 const App = () => {
   const [hasStarted, setHasStarted] = useState(false);
   const [isOn, setIsOn] = useState(false);
-  const [autoPaused, setAutoPaused] = useState(false); // when user goes to history without pausing, the task will autopause
-  const [isLoading, setIsLoading] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const [taskNumber, setTaskNumber] = useState(0);
-  const [inputField, setInputField] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // while making api calls to the backend
+  const [autoPaused, setAutoPaused] = useState(false); // when user goes to history without pausing, the task will autopause
+  const [timeElapsed, setTimeElapsed] = useState(0); // keeps track of time elapsed in the counter
+  const [taskNumber, setTaskNumber] = useState(0); // keeps track of the task being created and counted
+  const [inputField, setInputField] = useState(""); // values that User types in the input field for the task name
   const [nameTask, setNameTask] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [toastMessage, setToastMessage] = useState("");
-  const [startTime, setStartTime] = useState(0);
-  const [stopTime, setStopTime] = useState(0);
-  const [taskStatus, setTaskStatus] = useState("");
-  const [allTasks, setAllTasks] = useState([]);
-  const [isFiltered, setIsFiltered] = useState(false);
-  const [filteredTasks, setFilteredTasks] = useState([]);
-  const [editedTask, setEditedTask] = useState({});
+  const [startTime, setStartTime] = useState(0); // tracks length of session
+  const [stopTime, setStopTime] = useState(0); // tracks length of session
+  const [taskStatus, setTaskStatus] = useState(""); // task status displayed on screen
+  const [allTasks, setAllTasks] = useState([]); // grabs all tasks when User lands in History
+  const [isFiltered, setIsFiltered] = useState(false); // tracks if User is filtering results
+  const [filteredTasks, setFilteredTasks] = useState([]); // tracks filtered tasks
+  const [editedTask, setEditedTask] = useState({}); // tracks tasks being edited after User continues previously unfinished task
   const [datePick, setDatePick] = useState({
     from: {
       day: undefined,
@@ -55,8 +55,8 @@ const App = () => {
       month: undefined,
       year: undefined,
     },
-  });
-  const intervalRef = useRef(null);
+  }); // tracks filter dates
+  const intervalRef = useRef(null); // allows elapsed time to persist across component rendering
 
   const valueContext = {
     hasStarted,
