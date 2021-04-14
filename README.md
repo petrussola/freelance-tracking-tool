@@ -25,6 +25,7 @@ https://github.com/petrussola/freelance-tracking-tool-server
 
 ### Scripts:
 
+- `npm install` - installs dependencies
 - `npm run dev` - runs local development in `localhost:1234`
 - `npm run build` - build for production in `dist/` folder
 - `npm run format` - runs prettier (you need a `.prettierrc` file in the root folder)
