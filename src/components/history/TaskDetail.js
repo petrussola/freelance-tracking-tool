@@ -35,6 +35,7 @@ export default function TaskDetail({ task }) {
   const definedStartDate = `${startTimeObject.getDate()}/${
     startTimeObject.getMonth() + 1
   }/${startTimeObject.getFullYear()}`;
+  const definedStartTime = `${startTimeObject.getHours()}:${startTimeObject.getSeconds()} h`;
   const lenghtInNumb = parseInt(length, 10); // because Postgres returns bigint data in string for accuracy reasons http://knexjs.org/#Schema-bigInteger
   const dateObject = new Date(lenghtInNumb);
 
@@ -57,7 +58,7 @@ export default function TaskDetail({ task }) {
       <section>
         {`${
           task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️"
-        } |  Started on: ${definedStartDate} | ${
+        } |  Started on: ${definedStartDate} at ${definedStartTime} | ${
           dateObject.getHours() - 1
         } hours : ${dateObject.getMinutes()} minutes :  ${dateObject.getSeconds()} seconds | ${
           isFinished ? "Completed 🎉" : "Not finished"

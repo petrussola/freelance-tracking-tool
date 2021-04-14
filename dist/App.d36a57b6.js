@@ -37854,6 +37854,7 @@ function TaskDetail(_ref) {
       startTime = task.startTime;
   var startTimeObject = new Date(startTime);
   var definedStartDate = "".concat(startTimeObject.getDate(), "/").concat(startTimeObject.getMonth() + 1, "/").concat(startTimeObject.getFullYear());
+  var definedStartTime = "".concat(startTimeObject.getHours(), ":").concat(startTimeObject.getSeconds(), " h");
   var lenghtInNumb = parseInt(length, 10); // because Postgres returns bigint data in string for accuracy reasons http://knexjs.org/#Schema-bigInteger
 
   var dateObject = new Date(lenghtInNumb);
@@ -37870,7 +37871,7 @@ function TaskDetail(_ref) {
     });
   };
 
-  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("section", null, "".concat(task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️", " |  Started on: ").concat(definedStartDate, " | ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished"), /*#__PURE__*/_react.default.createElement("button", {
+  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("section", null, "".concat(task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️", " |  Started on: ").concat(definedStartDate, " at ").concat(definedStartTime, " | ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished"), /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleDelete,
     value: "delete"
   }, "Delete")));
