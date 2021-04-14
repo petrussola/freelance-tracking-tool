@@ -17,6 +17,17 @@ const StyledDiv = styled.div`
   align-items: center;
   > select {
     padding: 0.5rem;
+    @media(max-width: 600px) {
+      margin: 0.5rem 0;
+      width: 100%;
+    }
+  }
+  @media (max-width: 600px) {
+    flex-direction: column;
+    width: 100%;
+    button {
+      width: 100%;
+    }
   }
 `;
 

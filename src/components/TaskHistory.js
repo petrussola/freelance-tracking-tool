@@ -26,6 +26,9 @@ const StyledDiv = styled.div`
   border-radius: 5px;
   width: 85%;
   padding: 2rem;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 export default function TaskHistory() {

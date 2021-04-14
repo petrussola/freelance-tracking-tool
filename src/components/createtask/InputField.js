@@ -18,7 +18,7 @@ const StyledDiv = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  max-width: 100%;
+  min-width: 100%;
   @media (max-width: 600px) {
     flex-direction: column;
     justify-content: center;
@@ -55,7 +55,7 @@ const StyledDiv = styled.div`
     color: white;
     background-color: green;
     @media (max-width: 600px) {
-      width: 90%;
+      width: 100%
     }
   }
 

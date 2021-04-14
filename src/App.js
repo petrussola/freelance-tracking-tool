@@ -19,6 +19,10 @@ const StyledDiv = styled.div`
   justify-content: flex-start;
   align-items: center;
   min-height: 100vh;
+  width: 95%;
+  @media (max-width: 600px) {
+    width: 95%;
+  }
 `;
 
 const App = () => {

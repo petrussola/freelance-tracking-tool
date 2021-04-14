@@ -9,6 +9,10 @@ import TimerContext from "../../context/context";
 
 const StyledDiv = styled.div`
   padding: 3rem;
+  @media(max-width: 600px) {
+    width: 100%;
+    padding: 0;
+  }
 `;
 
 export default function AllTasks() {

@@ -35704,7 +35704,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  width: 25%;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  min-height: 3rem;\n  &.display-error {\n    color: white;\n    background-color: red;\n  }\n  &.display-toast {\n    color: white;\n    background-color: green;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  width: 25%;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  min-height: 3rem;\n  @media(max-width: 600px) {\n    width: 95%;\n    margin: 0.5rem 0;\n  }\n  &.display-error {\n    color: white;\n    background-color: red;\n  }\n  &.display-toast {\n    color: white;\n    background-color: green;\n  }\n"])));
 
 function DisplayMessage() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -37380,7 +37380,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-flow: row wrap;\n  align-items: center;\n  justify-content: center;\n  font-size: 1.5rem;\n  max-width: 100%;\n  @media (max-width: 600px) {\n    flex-direction: column;\n    justify-content: center;\n    align-items: center;\n  }\n  form {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    justify-content: flex-start;\n    width: 100%;\n    @media (max-width: 600px) {\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: center;\n    }\n  }\n  input {\n    height: 3rem;\n    padding: 0 3rem;\n    margin-left: 15%;\n    border: 0.2px solid #737373;\n    border-radius: 5px;\n    font-size: 1.5rem;\n    width: 50%;\n    @media (max-width: 600px) {\n      margin: 0.5rem;\n      width: 90%;\n    }\n  }\n  button {\n    border: 1px solid green;\n    color: white;\n    background-color: green;\n    @media (max-width: 600px) {\n      width: 90%;\n    }\n  }\n\n  h1 {\n    width: 50%;\n    margin-left: 15%;\n    padding-left: 3rem;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-flow: row wrap;\n  align-items: center;\n  justify-content: center;\n  font-size: 1.5rem;\n  min-width: 100%;\n  @media (max-width: 600px) {\n    flex-direction: column;\n    justify-content: center;\n    align-items: center;\n  }\n  form {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    justify-content: flex-start;\n    width: 100%;\n    @media (max-width: 600px) {\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: center;\n    }\n  }\n  input {\n    height: 3rem;\n    padding: 0 3rem;\n    margin-left: 15%;\n    border: 0.2px solid #737373;\n    border-radius: 5px;\n    font-size: 1.5rem;\n    width: 50%;\n    @media (max-width: 600px) {\n      margin: 0.5rem;\n      width: 90%;\n    }\n  }\n  button {\n    border: 1px solid green;\n    color: white;\n    background-color: green;\n    @media (max-width: 600px) {\n      width: 100%\n    }\n  }\n\n  h1 {\n    width: 50%;\n    margin-left: 15%;\n    padding-left: 3rem;\n  }\n"])));
 
 function InputField() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -37846,7 +37846,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start;\n  align-items: center;\n  padding: 0.5rem 3rem;\n  section {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-start;\n    align-items: center;\n    font-size: 1rem;\n  }\n"])));
+var StyledSection = _styledComponents.default.section(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  padding: 0.5rem 3rem;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  font-size: 1rem;\n  width: 100%;\n  border: 1px solid #737373;\n  border-radius: 5px;\n  margin: 0.5rem 0;\n  line-height: 2rem;\n  @media (max-width: 600px) {\n    flex-direction: column;\n    width: 100%;\n    padding: 0.5rem;\n    button {\n      margin: 0.5rem 0 0 0;\n      width: 100%;\n    }\n  }\n\n"])));
 
 function TaskDetail(_ref) {
   var task = _ref.task;
@@ -37878,10 +37878,10 @@ function TaskDetail(_ref) {
     });
   };
 
-  return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("section", null, "".concat(task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️", " |  Started on: ").concat(definedStartDate, " at ").concat(definedStartTime, " | ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished"), /*#__PURE__*/_react.default.createElement("button", {
+  return /*#__PURE__*/_react.default.createElement(StyledSection, null, "".concat(task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️", " |  Started on: ").concat(definedStartDate, " at ").concat(definedStartTime, " | ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished"), /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleDelete,
     value: "delete"
-  }, "Delete")));
+  }, "Delete"));
 }
 },{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","axios":"../node_modules/axios/index.js","../../../config/env":"../config/env.js","../../context/context":"context/context.js","../../helpers/helpers":"helpers/helpers.js"}],"components/history/AllTasks.js":[function(require,module,exports) {
 "use strict";
@@ -37909,7 +37909,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  padding: 3rem;\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  padding: 3rem;\n  @media(max-width: 600px) {\n    width: 100%;\n    padding: 0;\n  }\n"])));
 
 function AllTasks() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -38024,7 +38024,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  > select {\n    padding: 0.5rem;\n  }\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  > select {\n    padding: 0.5rem;\n    @media(max-width: 600px) {\n      margin: 0.5rem 0;\n      width: 100%;\n    }\n  }\n  @media (max-width: 600px) {\n    flex-direction: column;\n    width: 100%;\n    button {\n      width: 100%;\n    }\n  }\n"])));
 
 function DatePicker() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -38152,7 +38152,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  border: 0.5px solid #737373;\n  box-shadow: 10px 5px 15px #737373;\n  border-radius: 5px;\n  width: 85%;\n  padding: 2rem;\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  border: 0.5px solid #737373;\n  box-shadow: 10px 5px 15px #737373;\n  border-radius: 5px;\n  width: 85%;\n  padding: 2rem;\n  @media (max-width: 600px) {\n    width: 100%;\n  }\n"])));
 
 function TaskHistory() {
   var _useContext = (0, _react.useContext)(_context.default),
@@ -38311,7 +38311,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  min-height: 100vh;\n"])));
+var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  min-height: 100vh;\n  width: 95%;\n  @media (max-width: 600px) {\n    width: 95%;\n  }\n"])));
 
 var App = function App() {
   var _useState = (0, _react.useState)(false),
@@ -38496,7 +38496,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61242" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50227" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
