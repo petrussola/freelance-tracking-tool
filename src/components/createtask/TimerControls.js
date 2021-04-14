@@ -60,6 +60,8 @@ export default function TimerControls() {
     setNameTask,
     setInputField,
     lengthTime,
+    editedTask,
+    timeElapsed,
   } = useContext(TimerContext);
 
   const handleStartPause = () => {
@@ -68,14 +70,20 @@ export default function TimerControls() {
       setTaskStatus("Recording");
       const tempStartTime = Date.now();
       setStartTime(tempStartTime);
-    } else if (hasStarted && isOn) {
+    } else if (hasStarted && isOn && Object.keys(editedTask).length === 0) {
       // if task is started and is running, pause task - will trigger 2nd useEffect
       const tempPauseTime = Date.now();
       setStopTime(tempPauseTime);
-    } else if (hasStarted && !isOn) {
+    } else if (hasStarted && isOn && Object.keys(editedTask).length > 0) {
+      setStopTime(startTime + timeElapsed * 1000);
+    } else if (hasStarted && !isOn && Object.keys(editedTask).length === 0) {
       // if task is started but it is paused, restart task and set isOn - will trigger 1st useEffect
       const tempStartTime = Date.now();
       setStartTime(tempStartTime);
+    } else if (hasStarted && !isOn && Object.keys(editedTask).length > 0) {
+      setStartTime(
+        parseInt(editedTask.startTime, 10) + parseInt(editedTask.length, 10)
+      );
     }
   };
 
@@ -159,7 +167,12 @@ export default function TimerControls() {
   useEffect(() => {
     if (isOn && stopTime > 0 && startTime > 0 && !hasFinished) {
       setIsOn(false); // set task as not running
-      const diffTime = stopTime - startTime;
+      let diffTime;
+      if (Object.keys(editedTask).length > 0) {
+        diffTime = timeElapsed * 1000 - editedTask.length;
+      } else {
+        diffTime = stopTime - startTime;
+      }
       // if active task has been paused, we need to save interval of time in the server
       axios
         .put(`${envVariables.endpointBase}pause-task`, {
@@ -183,7 +196,12 @@ export default function TimerControls() {
     if (hasFinished && isOn) {
       // when task is stopped while running
       // update server with needed info: additional length of the session + end time
-      const diffTime = stopTime - startTime;
+      let diffTime;
+      if (Object.keys(editedTask).length > 0) {
+        diffTime = timeElapsed * 1000 - editedTask.length;
+      } else {
+        diffTime = stopTime - startTime;
+      }
       axios
         .put(`${envVariables.endpointBase}finish-task`, {
           id: taskNumber,

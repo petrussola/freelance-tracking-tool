@@ -47,18 +47,36 @@ export default function TaskHistory() {
     intervalRef,
     autoPaused,
     setAutoPaused,
+    editedTask,
+    timeElapsed,
+    setEditedTask,
   } = useContext(TimerContext);
 
   useEffect(() => {
-    if (hasStarted && startTime && isOn) {
+    if (
+      hasStarted &&
+      startTime &&
+      isOn &&
+      Object.keys(editedTask).length === 0
+    ) {
       const tempPauseTime = Date.now();
       setIsOn(false); // set task as not running
       setAutoPaused(true);
       setStopTime(tempPauseTime);
+    } else if (
+      hasStarted &&
+      startTime &&
+      isOn &&
+      Object.keys(editedTask).length > 0
+    ) {
+      setIsOn(false); // set task as not running
+      setAutoPaused(true);
+      setStopTime(startTime + timeElapsed * 1000);
     }
   }, []);
 
   useEffect(() => {
+    setEditedTask({});
     if (hasStarted && startTime && autoPaused && !hasFinished) {
       const diffTime = stopTime - startTime;
       axios

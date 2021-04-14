@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 
@@ -30,7 +31,7 @@ const StyledDiv = styled.div`
   }
 `;
 
-export default function CreateTask() {
+export default function CreateTask({ match }) {
   const {
     setInputField,
     setNameTask,
@@ -43,15 +44,34 @@ export default function CreateTask() {
     setStartTime,
     setStopTime,
     intervalRef,
+    editedTask,
+    setEditedTask,
+    allTasks,
   } = useContext(TimerContext);
 
+  const { taskId } = match.params;
+  if (taskId) {
+    const data = allTasks.filter((task) => {
+      return task.jobId === parseInt(taskId, 10);
+    });
+    setEditedTask(data[0]);
+  }
+
   useEffect(() => {
-    resetTask("", [setTaskStatus, setNameTask, setInputField]);
-    resetTask(false, [setHasStarted, setIsOn, setHasFinished]);
-    resetTask(0, [setTimeElapsed, setTaskNumber, setStartTime, setStopTime]);
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
-  }, []);
+    if (Object.keys(editedTask).length > 0) {
+      setInputField(editedTask.name);
+      setNameTask(editedTask.name);
+      setHasStarted(true);
+      setTimeElapsed(Math.floor(editedTask.length / 1000));
+      setTaskNumber(editedTask.jobId);
+    } else {
+      resetTask("", [setTaskStatus, setNameTask, setInputField]);
+      resetTask(false, [setHasStarted, setIsOn, setHasFinished]);
+      resetTask(0, [setTimeElapsed, setTaskNumber, setStartTime, setStopTime]);
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, [editedTask]);
 
   return (
     <StyledDiv>

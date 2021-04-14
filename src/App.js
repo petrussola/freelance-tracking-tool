@@ -44,6 +44,7 @@ const App = () => {
   const [allTasks, setAllTasks] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [editedTask, setEditedTask] = useState({});
   const [datePick, setDatePick] = useState({
     from: {
       day: undefined,
@@ -98,6 +99,8 @@ const App = () => {
     setLengthTime,
     isFiltered,
     setIsFiltered,
+    editedTask,
+    setEditedTask,
   };
 
   return (

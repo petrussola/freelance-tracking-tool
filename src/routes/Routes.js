@@ -12,6 +12,7 @@ export default function Routes() {
       <Switch>
         <Route exact path="/" component={CreateTask} />
         <Route path="/history" component={TaskHistory} />
+        <Route path="/task/:taskId" component={CreateTask} />
         <Route component={NotFound} />
       </Switch>
     </>

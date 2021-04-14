@@ -37409,7 +37409,7 @@ function InputField() {
   };
 
   (0, _react.useEffect)(function () {
-    if (hasStarted && nameTask.length > 0) {
+    if (hasStarted && nameTask && nameTask.length > 0) {
       _axios.default.put("".concat(_env.envVariables.endpointBase, "edit-name"), {
         name: nameTask,
         id: taskNumber
@@ -37422,7 +37422,7 @@ function InputField() {
   }, [nameTask]);
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("form", {
     onSubmit: handleName
-  }, nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("h1", null, nameTask) : /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("input", {
+  }, nameTask && nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("h1", null, nameTask) : /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("input", {
     name: "nameTask",
     placeholder: "Name your task",
     value: inputField,
@@ -37432,7 +37432,7 @@ function InputField() {
     onKeyDown: handleName
   }), /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleName
-  }, "Save Name")), nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("button", {
+  }, "Save Name")), nameTask && nameTask.length > 0 ? /*#__PURE__*/_react.default.createElement("button", {
     onClick: editName
   }, "Edit Name") : null));
 }
@@ -37566,7 +37566,9 @@ function TimerControls() {
       nameTask = _useContext.nameTask,
       setNameTask = _useContext.setNameTask,
       setInputField = _useContext.setInputField,
-      lengthTime = _useContext.lengthTime;
+      lengthTime = _useContext.lengthTime,
+      editedTask = _useContext.editedTask,
+      timeElapsed = _useContext.timeElapsed;
 
   var handleStartPause = function handleStartPause() {
     if (!hasStarted && !isOn) {
@@ -37574,15 +37576,19 @@ function TimerControls() {
       setTaskStatus("Recording");
       var tempStartTime = Date.now();
       setStartTime(tempStartTime);
-    } else if (hasStarted && isOn) {
+    } else if (hasStarted && isOn && Object.keys(editedTask).length === 0) {
       // if task is started and is running, pause task - will trigger 2nd useEffect
       var tempPauseTime = Date.now();
       setStopTime(tempPauseTime);
-    } else if (hasStarted && !isOn) {
+    } else if (hasStarted && isOn && Object.keys(editedTask).length > 0) {
+      setStopTime(startTime + timeElapsed * 1000);
+    } else if (hasStarted && !isOn && Object.keys(editedTask).length === 0) {
       // if task is started but it is paused, restart task and set isOn - will trigger 1st useEffect
       var _tempStartTime = Date.now();
 
       setStartTime(_tempStartTime);
+    } else if (hasStarted && !isOn && Object.keys(editedTask).length > 0) {
+      setStartTime(parseInt(editedTask.startTime, 10) + parseInt(editedTask.length, 10));
     }
   };
 
@@ -37667,7 +37673,14 @@ function TimerControls() {
     if (isOn && stopTime > 0 && startTime > 0 && !hasFinished) {
       setIsOn(false); // set task as not running
 
-      var diffTime = stopTime - startTime; // if active task has been paused, we need to save interval of time in the server
+      var diffTime;
+
+      if (Object.keys(editedTask).length > 0) {
+        diffTime = timeElapsed * 1000 - editedTask.length;
+      } else {
+        diffTime = stopTime - startTime;
+      } // if active task has been paused, we need to save interval of time in the server
+
 
       _axios.default.put("".concat(_env.envVariables.endpointBase, "pause-task"), {
         id: taskNumber,
@@ -37689,7 +37702,13 @@ function TimerControls() {
     if (hasFinished && isOn) {
       // when task is stopped while running
       // update server with needed info: additional length of the session + end time
-      var diffTime = stopTime - startTime;
+      var diffTime;
+
+      if (Object.keys(editedTask).length > 0) {
+        diffTime = timeElapsed * 1000 - editedTask.length;
+      } else {
+        diffTime = stopTime - startTime;
+      }
 
       _axios.default.put("".concat(_env.envVariables.endpointBase, "finish-task"), {
         id: taskNumber,
@@ -37766,7 +37785,9 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 var StyledDiv = _styledComponents.default.div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  border: 0.5px solid #737373;\n  box-shadow: 10px 5px 15px #737373;\n  border-radius: 5px;\n  width: 50%;\n  min-height: 400px;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  padding: 2rem;\n  @media (max-width: 600px) {\n    width: 95vw;\n    padding: 0.5rem;\n  }\n"])));
 
-function CreateTask() {
+function CreateTask(_ref) {
+  var match = _ref.match;
+
   var _useContext = (0, _react.useContext)(_context.default),
       setInputField = _useContext.setInputField,
       setNameTask = _useContext.setNameTask,
@@ -37778,15 +37799,35 @@ function CreateTask() {
       setTaskNumber = _useContext.setTaskNumber,
       setStartTime = _useContext.setStartTime,
       setStopTime = _useContext.setStopTime,
-      intervalRef = _useContext.intervalRef;
+      intervalRef = _useContext.intervalRef,
+      editedTask = _useContext.editedTask,
+      setEditedTask = _useContext.setEditedTask,
+      allTasks = _useContext.allTasks;
+
+  var taskId = match.params.taskId;
+
+  if (taskId) {
+    var data = allTasks.filter(function (task) {
+      return task.jobId === parseInt(taskId, 10);
+    });
+    setEditedTask(data[0]);
+  }
 
   (0, _react.useEffect)(function () {
-    (0, _helpers.resetTask)("", [setTaskStatus, setNameTask, setInputField]);
-    (0, _helpers.resetTask)(false, [setHasStarted, setIsOn, setHasFinished]);
-    (0, _helpers.resetTask)(0, [setTimeElapsed, setTaskNumber, setStartTime, setStopTime]);
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
-  }, []);
+    if (Object.keys(editedTask).length > 0) {
+      setInputField(editedTask.name);
+      setNameTask(editedTask.name);
+      setHasStarted(true);
+      setTimeElapsed(Math.floor(editedTask.length / 1000));
+      setTaskNumber(editedTask.jobId);
+    } else {
+      (0, _helpers.resetTask)("", [setTaskStatus, setNameTask, setInputField]);
+      (0, _helpers.resetTask)(false, [setHasStarted, setIsOn, setHasFinished]);
+      (0, _helpers.resetTask)(0, [setTimeElapsed, setTaskNumber, setStartTime, setStopTime]);
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, [editedTask]);
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement(_InputField.default, null), /*#__PURE__*/_react.default.createElement(_Status.default, null), /*#__PURE__*/_react.default.createElement(_ShowTimeSpent.default, null), /*#__PURE__*/_react.default.createElement(_TimerControls.default, null));
 }
 },{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","./createtask/InputField":"components/createtask/InputField.js","./createtask/Status":"components/createtask/Status.js","./createtask/ShowTimeSpent":"components/createtask/ShowTimeSpent.js","./createtask/TimerControls":"components/createtask/TimerControls.js","../context/context":"context/context.js","../helpers/helpers":"helpers/helpers.js"}],"components/history/BackHomeButton.js":[function(require,module,exports) {
@@ -37830,6 +37871,8 @@ var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
+var _reactRouterDom = require("react-router-dom");
+
 var _env = require("../../../config/env");
 
 var _context = _interopRequireDefault(require("../../context/context"));
@@ -37846,7 +37889,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var StyledSection = _styledComponents.default.section(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  padding: 0.5rem 3rem;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  font-size: 1rem;\n  width: 100%;\n  border: 1px solid #737373;\n  border-radius: 5px;\n  margin: 0.5rem 0;\n  line-height: 2rem;\n  @media (max-width: 600px) {\n    flex-direction: column;\n    width: 100%;\n    padding: 0.5rem;\n    button {\n      margin: 0.5rem 0 0 0;\n      width: 100%;\n    }\n  }\n\n"])));
+var StyledSection = _styledComponents.default.section(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  padding: 0.5rem 3rem;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  font-size: 1rem;\n  width: 100%;\n  border: 1px solid #737373;\n  border-radius: 5px;\n  margin: 0.5rem 0;\n  line-height: 2rem;\n  @media (max-width: 600px) {\n    flex-direction: column;\n    width: 100%;\n    padding: 0.5rem;\n    button {\n      margin: 0.5rem 0 0 0;\n      width: 100%;\n    }\n  }\n"])));
 
 function TaskDetail(_ref) {
   var task = _ref.task;
@@ -37856,7 +37899,8 @@ function TaskDetail(_ref) {
       setToastMessage = _useContext.setToastMessage,
       setErrorMessage = _useContext.setErrorMessage;
 
-  var length = task.length,
+  var jobId = task.jobId,
+      length = task.length,
       isFinished = task.isFinished,
       startTime = task.startTime;
   var startTimeObject = new Date(startTime);
@@ -37878,12 +37922,14 @@ function TaskDetail(_ref) {
     });
   };
 
-  return /*#__PURE__*/_react.default.createElement(StyledSection, null, "".concat(task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️", " |  Started on: ").concat(definedStartDate, " at ").concat(definedStartTime, " | ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished"), /*#__PURE__*/_react.default.createElement("button", {
+  return /*#__PURE__*/_react.default.createElement(StyledSection, null, "".concat(task.name ? task.name : "No name yet 🤷‍♂️ 🤷‍♀️", " |  Started on: ").concat(definedStartDate, " at ").concat(definedStartTime, " | ").concat(dateObject.getHours() - 1, " hours : ").concat(dateObject.getMinutes(), " minutes :  ").concat(dateObject.getSeconds(), " seconds | ").concat(isFinished ? "Completed 🎉" : "Not finished"), !isFinished ? /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    to: "/task/".concat(jobId)
+  }, /*#__PURE__*/_react.default.createElement("button", null, "Continue Task")) : null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleDelete,
     value: "delete"
   }, "Delete"));
 }
-},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","axios":"../node_modules/axios/index.js","../../../config/env":"../config/env.js","../../context/context":"context/context.js","../../helpers/helpers":"helpers/helpers.js"}],"components/history/AllTasks.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../../../config/env":"../config/env.js","../../context/context":"context/context.js","../../helpers/helpers":"helpers/helpers.js"}],"components/history/AllTasks.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38169,18 +38215,28 @@ function TaskHistory() {
       setTaskStatus = _useContext.setTaskStatus,
       intervalRef = _useContext.intervalRef,
       autoPaused = _useContext.autoPaused,
-      setAutoPaused = _useContext.setAutoPaused;
+      setAutoPaused = _useContext.setAutoPaused,
+      editedTask = _useContext.editedTask,
+      timeElapsed = _useContext.timeElapsed,
+      setEditedTask = _useContext.setEditedTask;
 
   (0, _react.useEffect)(function () {
-    if (hasStarted && startTime && isOn) {
+    if (hasStarted && startTime && isOn && Object.keys(editedTask).length === 0) {
       var tempPauseTime = Date.now();
       setIsOn(false); // set task as not running
 
       setAutoPaused(true);
       setStopTime(tempPauseTime);
+    } else if (hasStarted && startTime && isOn && Object.keys(editedTask).length > 0) {
+      setIsOn(false); // set task as not running
+
+      setAutoPaused(true);
+      setStopTime(startTime + timeElapsed * 1000);
     }
   }, []);
   (0, _react.useEffect)(function () {
+    setEditedTask({});
+
     if (hasStarted && startTime && autoPaused && !hasFinished) {
       var diffTime = stopTime - startTime;
 
@@ -38266,6 +38322,9 @@ function Routes() {
   }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
     path: "/history",
     component: _TaskHistory.default
+  }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+    path: "/task/:taskId",
+    component: _CreateTask.default
   }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
     component: _NotFound.default
   })));
@@ -38404,7 +38463,12 @@ var App = function App() {
       filteredTasks = _useState36[0],
       setFilteredTasks = _useState36[1];
 
-  var _useState37 = (0, _react.useState)({
+  var _useState37 = (0, _react.useState)({}),
+      _useState38 = _slicedToArray(_useState37, 2),
+      editedTask = _useState38[0],
+      setEditedTask = _useState38[1];
+
+  var _useState39 = (0, _react.useState)({
     from: {
       day: undefined,
       month: undefined,
@@ -38416,9 +38480,9 @@ var App = function App() {
       year: undefined
     }
   }),
-      _useState38 = _slicedToArray(_useState37, 2),
-      datePick = _useState38[0],
-      setDatePick = _useState38[1];
+      _useState40 = _slicedToArray(_useState39, 2),
+      datePick = _useState40[0],
+      setDatePick = _useState40[1];
 
   var intervalRef = (0, _react.useRef)(null);
   var valueContext = {
@@ -38460,7 +38524,9 @@ var App = function App() {
     lengthTime: lengthTime,
     setLengthTime: setLengthTime,
     isFiltered: isFiltered,
-    setIsFiltered: setIsFiltered
+    setIsFiltered: setIsFiltered,
+    editedTask: editedTask,
+    setEditedTask: setEditedTask
   };
   return /*#__PURE__*/_react.default.createElement(_context.default.Provider, {
     value: valueContext
@@ -38496,7 +38562,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50227" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52613" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

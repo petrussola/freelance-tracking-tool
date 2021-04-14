@@ -2,6 +2,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 // env variables
 import { envVariables } from "../../../config/env";
@@ -33,13 +34,12 @@ const StyledSection = styled.section`
       width: 100%;
     }
   }
-
 `;
 export default function TaskDetail({ task }) {
   const { setAllTasks, setToastMessage, setErrorMessage } = useContext(
     TimerContext
   );
-  const { length, isFinished, startTime } = task;
+  const { jobId, length, isFinished, startTime } = task;
   const startTimeObject = new Date(startTime);
   const definedStartDate = `${startTimeObject.getDate()}/${
     startTimeObject.getMonth() + 1
@@ -71,6 +71,12 @@ export default function TaskDetail({ task }) {
       } hours : ${dateObject.getMinutes()} minutes :  ${dateObject.getSeconds()} seconds | ${
         isFinished ? "Completed 🎉" : "Not finished"
       }`}
+      {!isFinished ? (
+        <Link to={`/task/${jobId}`}>
+          <button>Continue Task</button>
+        </Link>
+      ) : null}
+
       <button onClick={handleDelete} value="delete">
         Delete
       </button>

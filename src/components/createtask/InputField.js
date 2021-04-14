@@ -93,7 +93,7 @@ export default function InputField() {
   };
 
   useEffect(() => {
-    if (hasStarted && nameTask.length > 0) {
+    if (hasStarted && nameTask && nameTask.length > 0) {
       axios
         .put(`${envVariables.endpointBase}edit-name`, {
           name: nameTask,
@@ -114,7 +114,7 @@ export default function InputField() {
   return (
     <StyledDiv>
       <form onSubmit={handleName}>
-        {nameTask.length > 0 ? (
+        {nameTask && nameTask.length > 0 ? (
           <h1>{nameTask}</h1>
         ) : (
           <>
@@ -128,7 +128,7 @@ export default function InputField() {
             <button onClick={handleName}>Save Name</button>
           </>
         )}
-        {nameTask.length > 0 ? (
+        {nameTask && nameTask.length > 0 ? (
           <button onClick={editName}>Edit Name</button>
         ) : null}
       </form>
