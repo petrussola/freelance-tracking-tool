@@ -3,13 +3,14 @@
 ### Features:
 
 - Start, pause and stop tasks.
-- History of tasks.
+- Fetch list of all tasks ever created.
+- Delete task.
 - You can continue previously unfinished task - timer will start where you left it.
 - Auto-pauses ongoing task if you visit the history.
 - You can set name or rename task.
 - You can filter tasks between 2 dates.
 
-### Built with:
+### This is the frontend piece, built with:
 
 - React
 - Styled-components
