@@ -12,6 +12,21 @@ export default function DateSelector({ from, to, name, type }) {
     dates.push(i);
   }
 
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   const handleChange = (e, name, type) => {
     e.preventDefault();
     setDatePick({
@@ -28,7 +43,7 @@ export default function DateSelector({ from, to, name, type }) {
       >{`--Choose a ${name}--`}</option>
       {dates.map((date) => (
         <option value={date} key={date}>
-          {name === "month" ? date + 1 : date}
+          {name === "month" ? months[date] : date}
         </option>
       ))}
     </select>

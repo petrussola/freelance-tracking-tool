@@ -37967,6 +37967,8 @@ function DateSelector(_ref) {
     dates.push(i);
   }
 
+  var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
   var handleChange = function handleChange(e, name, type) {
     e.preventDefault();
     setDatePick(_objectSpread(_objectSpread({}, datePick), {}, _defineProperty({}, type, _objectSpread(_objectSpread({}, datePick[type]), {}, _defineProperty({}, name, e.target.value)))));
@@ -37983,7 +37985,7 @@ function DateSelector(_ref) {
     return /*#__PURE__*/_react.default.createElement("option", {
       value: date,
       key: date
-    }, name === "month" ? date + 1 : date);
+    }, name === "month" ? months[date] : date);
   }));
 }
 },{"react":"../node_modules/react/index.js","../../context/context":"context/context.js"}],"components/history/DatePicker.js":[function(require,module,exports) {
