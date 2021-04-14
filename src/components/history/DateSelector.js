@@ -40,6 +40,7 @@ export default function DateSelector({ from, to, name, type }) {
       <option
         value=""
         selected={!datePick[type][name] ? true : false}
+        data-cy={type === "from" && name === "month" ? "month-button" : null}
       >{`--Choose a ${name}--`}</option>
       {dates.map((date) => (
         <option value={date} key={date}>

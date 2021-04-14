@@ -250,7 +250,11 @@ export default function TimerControls() {
 
   return (
     <StyledDiv>
-      <button onClick={handleStartPause} disabled={hasFinished ? true : false}>
+      <button
+        onClick={handleStartPause}
+        disabled={hasFinished ? true : false}
+        data-cy="start-pause-button"
+      >
         {isOn ? "Pause" : hasStarted ? "Restart" : "Start"}
       </button>
       {hasStarted ? (

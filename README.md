@@ -17,6 +17,7 @@
 - React-Router-Dom
 - Axios
 - Parcel
+- Cypress (testing)
 
 ### Where is the backend?
 
@@ -28,3 +29,4 @@ https://github.com/petrussola/freelance-tracking-tool-server
 - `npm run build` - build for production in `dist/` folder
 - `npm run format` - runs prettier (you need a `.prettierrc` file in the root folder)
 - `npm run lint` - runs eslint
+- `npm run cy:run` - runs cypress tests in the command line

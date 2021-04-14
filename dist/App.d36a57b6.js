@@ -37750,7 +37750,8 @@ function TimerControls() {
   }, [hasFinished]);
   return /*#__PURE__*/_react.default.createElement(StyledDiv, null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleStartPause,
-    disabled: hasFinished ? true : false
+    disabled: hasFinished ? true : false,
+    "data-cy": "start-pause-button"
   }, isOn ? "Pause" : hasStarted ? "Restart" : "Start"), hasStarted ? /*#__PURE__*/_react.default.createElement("button", {
     onClick: handleStop,
     disabled: hasFinished ? true : false
@@ -38048,7 +38049,8 @@ function DateSelector(_ref) {
     }
   }, /*#__PURE__*/_react.default.createElement("option", {
     value: "",
-    selected: !datePick[type][name] ? true : false
+    selected: !datePick[type][name] ? true : false,
+    "data-cy": type === "from" && name === "month" ? "month-button" : null
   }, "--Choose a ".concat(name, "--")), dates.map(function (date) {
     return /*#__PURE__*/_react.default.createElement("option", {
       value: date,
@@ -38290,7 +38292,11 @@ function TaskHistory() {
     _axios.default.get("".concat(_env.envVariables.endpointBase, "tasks")).then(function (res) {
       setAllTasks(res.data.data);
     }).catch(function (err) {
-      (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+      if (!err.response) {
+        (0, _helpers.handleDisplayMessage)("The server seems to be offline. Please check with the owner of the app :)", setErrorMessage);
+      } else {
+        (0, _helpers.handleDisplayMessage)(err.response.data.data, setErrorMessage);
+      }
     }).finally(function () {
       setIsLoading(false);
     });

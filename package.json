@@ -8,6 +8,8 @@
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
     "dev": "parcel src/index.html",
     "build": "parcel build src/index.html",
+    "cypress:open": "cypress open",
+    "cy:run": "cypress run --spec \"cypress/integration/app/**/*\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -25,6 +27,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "cypress": "^7.1.0",
     "eslint-plugin-react": "^7.23.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

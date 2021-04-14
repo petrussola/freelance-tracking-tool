@@ -97,7 +97,12 @@ export default function DatePicker() {
     <StyledDiv>
       From:
       <DateSelector from={1} to={31} name="day" type="from" />
-      <DateSelector from={0} to={11} name="month" type="from" />
+      <DateSelector
+        from={0}
+        to={11}
+        name="month"
+        type="from"
+      />
       <DateSelector from={2021} to={2021} name="year" type="from" />
       To:
       <DateSelector from={1} to={31} name="day" type="to" />

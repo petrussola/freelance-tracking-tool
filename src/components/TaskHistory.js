@@ -123,7 +123,14 @@ export default function TaskHistory() {
         setAllTasks(res.data.data);
       })
       .catch((err) => {
-        handleDisplayMessage(err.response.data.data, setErrorMessage);
+        if (!err.response) {
+          handleDisplayMessage(
+            "The server seems to be offline. Please check with the owner of the app :)",
+            setErrorMessage
+          );
+        } else {
+          handleDisplayMessage(err.response.data.data, setErrorMessage);
+        }
       })
       .finally(() => {
         setIsLoading(false);
